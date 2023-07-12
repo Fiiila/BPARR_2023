@@ -1,0 +1,1 @@
+# Zde bude přidán odkaz na stažení zip archivu s aktuálním latexem
