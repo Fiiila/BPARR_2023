@@ -1,0 +1,426 @@
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT HEADER
+%
+% _____________________________________________________________________________
+%
+\documentclass[czech, bc, kky, he, iso690alph]{fasthesis}
+\title{Analýza systémů pro udržení vozidla v jízdním pruhu}
+\author{Filip}{Jašek}{}{}
+\supervisor{Ing. Petr Neduchal, Ph.D.}
+\assignment{zadani.pdf}
+\signdate{31}{12}{2022}{V Plzni}% << the longest local name in the Czech Rep.
+
+\addbibresource{sources.bib}% << the file with the bibliographical database to be used throughout the text
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT FRONTMATTER TEXTS
+%
+% _____________________________________________________________________________
+%
+\abstract{Cílem bakalářské práce je analyzovat systémy, které lze použít pro autonomní udržení vozidla v jízdním pruhu na základě vizuálního senzoru - kamery. Analýza se skládá z obecného seznámení s tématem, představení relevantních simulátorů a datasetů, jednotlivých přístupů a jejich slabin. Tři hlavní metody jsou teoreticky více rozebrány a dvě z nich jsou implementovány a otestovány v praktické části na simulačním příkladu diferenciálního dvoukolového robota. Jedna je založena na algoritmických metodách zpracování obrazu a druhá na modernějším přístupu segmentace obrazu pomocí neuronové sítě, konkrétně U-Net. V rámci praktické demonstrace dvou zmíněných metod bylo provedeno i jejich srovnání s manuálně vytvořeným vzorem. \textbf{Hlavním přínosem této práce je přiblížení principů autonomního řízení na zjednodušené úloze udržení vozidla v jízdním pruhu a seznámení s překážkami této oblasti.}}
+% *** English abstract ***
+{přepíši do angličtiny až bude schválena česká verze.}
+\keywords{autonommní, simulátor, dataset, robot, algoritmický, zpracování obrazu, neuronová síť, U-Net}
+% _____________________________________________________________________________
+%
+%        ACKNOWLEDGEMENT
+% _____________________________________________________________________________
+%
+\acknowledgement{Tady dopsat poděkování}
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT TEXT BEGINNING
+%
+% _____________________________________________________________________________
+%
+\begin{document}
+    \frontpages[tm] % or notm if the `trademark' declaration is not needed
+    \tableofcontents
+    % 
+    % -x---- ADDITIONAL COLOUR DEFINITIONS ----------------------------------------
+    %
+    \makeatletter%
+    \ifx\FASThesis@style\c@fullcolor%
+    	\definecolor{fascolor}{cmyk}{0.06, 0.27, 1.0, 0.12}%
+    	\definecolor{fascolordk}{cmyk}{0.05, 0.28, 1.0, 0.24}%
+    \else%
+    	\definecolor{fascolor}{cmyk}{0, 0, 0, 0.6}%
+    	\definecolor{fascolordk}{cmyk}{0, 0, 0, 0.75}%
+    \fi%
+    \makeatother%
+    \lstdefinestyle{plainsrc}{
+    	backgroundcolor=\color{fascolor!10},
+    	basicstyle=\ttzfamily\footnotesize,
+    	numberstyle=\tiny\color{fascolordk},
+    	numbers=left,
+    	numbersep=5pt,
+    	keepspaces=true,
+    	tabsize=2,
+    	extendedchars=true,
+    	literate={á}{{\'a}}1 {č}{{\v{c}}}1 {ď}{{\v{d}}}1 {é}{{\'e}}1 {ě}{{\v{e}}}1 {è}{{\`{e}}}1 {í}{{\'{\i}}}1 {ľ}{{\v{l}}}1 {ň}{{\v{n}}}1 {ó}{{\'o}}1 {ŕ}{{\'r}}1 {ř}{{\v{r}}}1 {š}{{\v{s}}}1 {ť}{{\v{t}}}1 {ú}{{\'u}}1 {ů}{{\r{u}}}1 {ý}{{\'y}}1 {ž}{{\v{z}}}1
+    	{Á}{{\'A}}1 {Č}{{\v{C}}}1 {Ď}{{\v{D}}}1 {É}{{\'E}}1 {Ě}{{\v{E}}}1 {È}{{\`{E}}}1 {Í}{{\'I}}1 {Ľ}{{\v{L}}}1 {Ň}{{\v{N}}}1 {Ó}{{\'O}}1 {Ŕ}{{\'R}}1 {Ř}{{\v{R}}}1 {Š}{{\v{Š}}}1 {Ť}{{\v{T}}}1 {Ú}{{\'U}}1 {Ů}{{\r{U}}}1 {Ý}{{\'Y}}1 {Ž}{{\v{Z}}}1
+    }
+    % -x---- END OF ADDITIONAL COLOUR DEFINITIONS ---------------------------------
+    % _____________________________________________________________________________
+    %
+    %
+    %        CHAPTER
+    %
+    % _____________________________________________________________________________
+    %
+	\chapter{Úvod}
+	    Autonomní řízení je zajímavou a náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Postupně vyvíjená řešení však naráží na překážky v podobě skepse, nedůvěry lidí, technologických nedostatků, neideálního prostředí a dalších aspektů popsaných v článku \cite{autopilot}. Mimo méně pokročilé projekty, které mohou dělat chybná rozhodnutí, existují řešení, které jsou ve vývoji mnohem dále pokouší se je implementovat do provozu (např. autopilot automobilky Tesla). Přes pokrokovost a množství dat od uživatelů těchto automobilů ale stále není možné vyloučit kolizi v reálném provozu. Ty však nemusí být způsobeny samotných systémem, ale třeba i lidským řidičem. Možností je zde v více, například a to kolize způsobená řidičem autonomního vozidla, který zasáhne do řízení, nestandardním chováním řidiče jiného vozidla, selháním autonomního systému nebo jinými okolními vlivy. Záznamy o těchto incidentech rozdělují lidi v názoru na tuto technologii a zvyšují tak tlak na její sofistikovanost.\\
+ 	\chapter{Úvod 2}
+		Autonomní řízení je zajímavou a náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tak tím mimo jiné negativní dopady lidských chyb v dopravních nehodách a zvýšit tak bezpečnost v dopravě pro všechny účastníky provozu. Postupně vyvíjená řešení však naráží na překážky v podobě skepse, nedůvěry lidí, technologických nedostatků, neideálního prostředí a dalších aspektů popsaných v článku \cite{autopilot}. Mimo méně pokročilé projekty, které mohou dělat chybná rozhodnutí, existují řešení, které jsou ve vývoji mnohem dále pokouší se je implementovat do provozu (např. autopilot automobilky Tesla). Přes pokrokovost a množství dat od uživatelů těchto automobilů ale stále není možné vyloučit kolizi v reálném provozu. Ty však nemusí být způsobeny samotných systémem, ale třeba i lidským řidičem jiného vozidla nebo dokonce cyklisty. Již více publikací se věnuje bezpečnosti autonomních vozidel (dále AV). Kvůli proporčně menšímu množství AV vůči konvenčním vozidlům (dále KV) jsou záznamy nehod nevyvážené a tudíž může být náročné data správně interpretovat jelikož jak plyne . . Možností je zde v více, například a to kolize způsobená řidičem autonomního vozidla, který zasáhne do řízení, nestandardním chováním řidiče jiného vozidla, selháním autonomního systému nebo jinými okolními vlivy. Záznamy o těchto incidentech rozdělují lidi v názoru na tuto technologii a zvyšují tak tlak na její sofistikovanost.
+	\chapter{Úvod 3 - FINAL}
+		Autonomní řízení je velice zajímavou avšak náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Přes veškeré dostupné technologie, systémy naráží na překážky v podobě nehomogenních podmínek \cite{VIOLET} nebo nepředvídatelného chování ostatních účastníků provozu \cite{AV_crashes_involved_vulnerable, AV_vs_CV_crashes}. Ačkoliv jsou v moderních vozidlech nejrůznější asistenční systémy již téměř standardem, jen malá část z nich je vybavena systémem schopným autonomního řízení. Za zmínku stojí americká automobilka \href{https://www.tesla.com}{Tesla}\footnote{\href{https://www.tesla.com}{https://www.tesla.com}}, která jako jedna z mála nabízí za příplatek i možnost uživatelského přístupu k autonomnímu systému autopilot a využívat ho na veřejných komunikacích. Bohužel však stále není možné ho využívat bez pozornosti řidiče ani vyloučit možné kolize. Ty však nemusí být způsobeny samotných systémem, ale třeba i jiným vozidlem, cyklistou, nebo dokonce převzetím řízení člověkem.
+		
+		Nejen s technologickými problémy je nutno bojovat, aby se prosadilo větší rozšíření těchto vozidel. Všeobecná skepse vůči autonomii v mobilitě vyplývající z analýzy sociální sítě Reddit \cite{public_opinion_on_AV} nepřispívá k pozitivnímu pohledu na tuto technologii. Původcem nedůvěry nebo obav z ní je způsobeno zejména mylným povědomím a nedostatečnou informovaností o její bezpečnosti \cite{AV_vs_CV_crashes}.
+		
+		Typickou predikcí budoucnosti mobility jsou právě autonomní prostředky, které budou schopny dopravovat lidi, kteří se mezitím budou zabývat například prací, spánku nebo jiným činnostem bez stresu z denního dojíždění. Dnes sice tato budoucnost stále není skutečností, ale technologickými pokroky se dostáváme stále blíže. Výrazný posun zajistilo nejen nedávné rozšíření neuronových sítí ale také matematické metody a algoritmy, které se stále používají a často i v kombinaci s neuronovými sítěmi.
+		
+		V práci bude prvně popsána samotná autonomie a diskutována její bezpečnost. V další kapitole se bude věnovat teoretickému principu jednotlivých přístupů v úloze detekce jízdního pruhu a poté aplikaci dvou z prezentovaných principů. V neposlední řadě budou představeny relevantní simulátory a datové zdroje. Na závěr budou porovnány obě prakticky předvedené řešení na vzorovém datasetu.
+    
+    \section{Stupně autonomie}
+       	Protože autonomní systémy nejsou všechny na stejné úrovni/\textbf{stejně sofistikované???}, byla již v roce 2014 stanovena definice 6ti stupňů autonomie organizací SAE\footnote{Society of Automobile Engineers} často odkazovaná jako SAE Levels of Driving Automation\texttrademark od úrovně 0 (bez automatizace) do  úrovně 5 (plně autonomní). Od té doby došlo k několika revizím. Poslední proběhla v roce 2021 a její plné znění lze získat na oficiálních stránkách společnosti \cite{SAE_autonomy_levels}. Oficiální 41 stránkový dokument obsahuje detailní definice rolí řidiče a systému pro jednotlivé stupně. K obecnému porozumění tohoto rozdělení postačí zjednodušený graf na Obrázku \ref{pic:levels_of_autonomy}.
+       	
+       		\begin{figure}[h]
+       			\centering
+       			\includegraphics[width=.95\textwidth]{./Graphics/sae_levels_of_autonomy}
+       			\caption{Graf zobrazující úrovně automatizace od 0 (bez automatizace) do 5 (plně autonomní) převzat ze stránek společnosti \href{https://www.sae.org/standards/content/j3016_202104}{SAE}}
+       			\label{pic:levels_of_autonomy}
+       		\end{figure}
+       	
+       	Na základě zmíněné stupnice se podle pravidel pro jednotlivé stupně udělí systému odpovídající hodnocení. Tesla autopilot, považovaný za jeden z nejlepších, dosáhl dle článku \cite{autopilot} v tomto žebříčku pouze na stupeň 2 přidělený institucí "National Highway Traffic Safety Administration". Z toho je patrné, že je vývoj stále na počátku. Díky zvyšující se implementaci asistenčních systémů do běžně dostupných aut lze očekávat, že se počet vozidel se stupněm autonomie větší než 0 bude zvyšovat.         
+        
+        Jízdní asistenti v dnešní době běžně pomáhají varovat řidiče při překročení jízdních pruhů, brání přílišnému přiblížení, hlídají mrtvý úhel a mnoho dalšího. Většinu těchto asistenčních systémů lze zařadit do prvního stupně autonomie. Jde tedy o systémy, které dokážou řidiče pouze varovat nebo zasáhnout v omezeném rozsahu do řízení a to pouze pod jeho dozorem.
+        
+        Zatímco výše zmíněné systémy slouží spíše pro podporu řidiče a zvýšení bezpečnosti, v systémech s autonomií stupně 3 až 5 se z člověka stává pasažér, kdy automobil zastává veškeré povinnosti řidiče. Tato práce se zabývá problematikou udržení vozidla v jízdním pruhu, jež je součástí systému ve všech stupních kromě 0. Z toho je patrné, že se jedná o jeden ze stavebních kamenů celého autonomního řízení vozidla.\\
+    \section{Bezpečnost autonomních vozidel}
+    	Dopíšu ke konci...není prioritou
+	% _____________________________________________________________________________
+	%
+	%
+	%        CHAPTER
+	%
+	% _____________________________________________________________________________
+	% 
+    \chapter{Teoretická část - rešerše přístupů}\label{chap:01_asisten_jizdy_v_pruhu}
+	    V následujícím textu bude nejdříve podrobně rozebrán problém a popsány nejpoužívanější přístupy. Jedná se o řešení algoritmické, řešení založené na zpětnovazebním učení\footnote{v literatuře známé jako reinforcement learning} a nakonec řešení pomocí hlubokého učení\footnote{deep learning} na bázi neuronových sítí.
+	    
+        I přes to, že se zdá jízda v pruhu jako problém s jednoduchým řešením, není to tak úplně pravda. Pro účely představení jednotlivých technologií bude problém zjednodušen předpokladem ideálních podmínek a zanedbáním variability okolního prostředí.
+        
+        Složitost problému bude ilustrována na následujícím příkladu. Při vjezdu do zatáčky, řidič podle jejího tvaru zvolí vhodnou reakci (zpomalení, zatočení apod.) a zatáčku bezpečně projede. V popsané situaci se ale děje daleko více než se na první pohled zdá. Vše stojí na pozorování právě probíhající situace okolo auta a chování samotného auta. Řidič musí mít prvně znalost o autě samotném, jeho velikosti, hmotnosti, výkonu, citlivosti řízení, brzd. Dále pomocí svého zraku pozoruje silnici a polohu, ve které se nachází a na získané informace reaguje zatočením volantu, sešlápnutím pedálu plynu nebo brzdy a pozoruje, jak se změnily zmíněné parametry. Tento cyklus člověk při řízení zpočátku zaznamená, ale po jisté době ho přestává vnímat vědomě.
+        
+        Správnou otázkou zde ale je, jak pozná, kudy vede cesta a jak vlastně vypadá. Pro člověka je to přirozená věc, nad kterou se ani nepozastaví, ale stroji to působí značný problém rozpoznat. Prvně zmíněné reakce člověka lze totiž implementovat pomocí již známých regulačních smyček a modelů, ale spolehlivé nalezení samotné cesty není již tak přímočarý problém.
+        
+        \section{Algoritmické řešení}
+            Již dříve se lidé zajímali o nejrůznější metody autonomního řízení vozidel. Například nemocnice Motol v Praze nebo firma Amazon ve svých skladech dokonce implementovaly funkční systém autonomních vozítek na bázi sledování předem vymezené trasy zabudované v podlaze, kterou sledují pomocí odpovídajících senzorů. Tyto metody však vyžadují připravené prostředí a na úpravu již existující sítě pozemních komunikací by muselo být vynaloženo značné množství nákladů, aby navíc odolalo vlivům počasí, kterého jsou systémy ve skladech a uzavřených budovách ušetřeny.
+            
+            Nynější komunikace jsou vytvořeny s ohledem na to, že se po nich budou řidiči pohybovat na základě vizuální zpětné vazby. Výhradní použití ultrazvukových, radarových nebo lidarových senzorů se tedy pro řešení tohoto problému nehodí ačkoliv pro některé úlohy mohou být zásadní. Na základě těchto skutečností se jako nejpraktičtější jeví použití kamer.
+            
+            Algoritmický přístup spočívá ve zpracování jednotlivých kamerových snímků za pomocí zavedených algoritmů do formy vhodné pro regulátor, který vytváří akční zásahy pro ovládání vozidla.\\
+            Obvyklý postup implementace popsaný v \cite{VIOLET} se skládá z kroků popsaných v samostatných kapitolách \ref{chap:01_stanoveni_modelu_silnice} až \ref{chap:01_postprocessing}.\\
+            \subsection{Stanovení modelu silnice}\label{chap:01_stanoveni_modelu_silnice}
+                Pro eliminaci chyb a šumu v obrazu je vhodné předem určit model silnice, po které se bude vozidlo pohybovat. Vhodným modelem je pro většinu moderních silnic Klotoid\footnote{křivka nazývaná také jako Eulerova} používaný při stavbě rychlostních cest a dálnic, popsán rovnicí \ref{eqn:clothoid equation}.
+                
+                Avšak při optimalizaci detekce pro dálnici lze uvažovat, že na zpracovávaném úseku budou hranice cesty tvořit rovnoběžné přímky. Stejný model však nebude dobře aproximovat trasy s prudšími zatáčkami a bude potřeba použít jiný model na bázi křivek (spline). Při výběru je nutné zohlednit i maximální rychlost, podle které je nutné přizpůsobit nejen viditelnost, ale právě i model. Pokud se totiž vozidlo bude pohybovat velmi malou rychlostí, lze použít jednodušší lineární model, protože na krátkém úseku lze potřebnou část cesty aproximovat opět přímkou i když se jedná o zatáčku.
+                
+                Dalším parametrem je požadovaná viditelnost, která může být ovlivněna reakční dobou systému za kterou by měl vozidlo zastavit nebo vyvinout zásah eliminující nenadálé krizové situace. V tomto případě je nutné v modelu uvažovat i fyzikální vlastnosti samotného vozidla. Touto problematikou se však v tato práce zabývat nebude \textbf{pro chybějící senzory na testovacím zařízení a tedy nemožnosti aproximovat chování vozidla lineárním modelem -- VYPUSTIT??}.
+                
+                	\begin{figure}[h]
+                		\centering
+                		\includegraphics[width=.7\textwidth]{./Graphics/Euler_Spiral.pdf}
+                		\caption{Eulerova křivka.}
+                		\label{pic:Eulerova_krivka}
+                	\end{figure}
+                
+                Klotoida (viz. Obrázek \ref{pic:Eulerova_krivka}) používaná pro návrh silnic, dálnic nebo horských drah pomáhá svým tvarem eliminovat rázové působení přetížení v zatáčkách a rozprostřít tak působící síly po celé délce dráhy co nejvíce rovnoměrně. Následující odvození aproximace bylo inspirováno článkem \cite{eliou_kaliabetsos_2013}.
+                
+                Rovnici \ref{eqn:clothoid equation} používanou pro popis této nekonečné křivky 
+                    
+                    %viz https://etrr.springeropen.com/articles/10.1007/s12544-013-0119-8
+                    \begin{equation}
+                        R_{i}L_{i} = A^{2},
+                        \label{eqn:clothoid equation}
+                    \end{equation}
+                 kde \(R_{i}\) je radius křivky v daném bodě \(i\), \(L_{i}\) její délka od počátku a \(A\) je parametr určující poměrnou velikost křivky.
+                 	\begin{figure}[h]
+                 		\centering
+                 		\includegraphics[width=.7\textwidth]{./Graphics/Euler_Spiral_part.pdf}
+                 		\caption{Část Eulerovy křivky.}
+                 		\label{pic:Eulerova_krivka_cast}
+                 	\end{figure}
+                 Diferenciál celkové délky křivky pak díky znalostem z obrázku \ref{pic:Eulerova_krivka_cast} vypočten jako
+                    \begin{equation}
+                        d L = R d\tau
+                    \end{equation}
+                dosazením za \(R\)
+                    \begin{equation}
+                        L d L = A^{2}d\tau.
+                    \end{equation}
+                Integrací je docíleno
+                    \begin{equation}
+                        \frac{L^{2}}{2} = A^{2}\tau + C,
+                    \end{equation}
+                kde \(C\) je integrační konstanta a vyjádřením úhlu tečny v obloukové míře\(\tau\) vůči ose \(x\) jako
+                    \begin{equation}
+                        \tau = \frac{L^{2}}{2A^{2}}.
+                    \end{equation}
+                S jeho použitím budou diference souřadnic
+                    \begin{eqnarray}
+                        d X & = & d L\cos{\frac{L^{2}}{2A^{2}}}\\
+                        d Y & = & d L\sin{\frac{L^{2}}{2A^{2}}}
+                    \end{eqnarray}
+                a integrací za pomoci tzv. Fresnelových integrálů
+                    \begin{eqnarray}
+                        x & = & \int_{0}^{L}\cos(\frac{l^{2}}{2A^{2}})dl\\
+                        y & = &\int_{0}^{L}\sin(\frac{l^{2}}{2A^{2}})dl
+                    \end{eqnarray}
+                a rozvojem v Taylorovu řadu
+                    \begin{eqnarray}
+                        x & = & l -\frac{l^{5}}{40(A)^{4}}+\frac{l^{9}}{3456(A)^{8}}-\dots\\
+                        y & = & \frac{l^{3}}{6(A)^{2}}-\frac{l^{7}}{336(A)^{6}}+\frac{l^{11}}{42240(A)^{10}}-\dots
+                    \end{eqnarray}
+                Zachováním pouze prvních členů vznikne soustava rovnic
+                    \begin{eqnarray}
+                        x & = & l \\
+                        y & = & \frac{l^{3}}{6(A)^{2}}
+                    \end{eqnarray}
+                jejíž řešením je kubická rovnice
+                    \begin{eqnarray}
+                        y & = & \frac{x^{3}}{6(A)^{2}}
+                        \label{eqn:dukaz_aproximace_clothoidu_polynomem_3st}
+                    \end{eqnarray}
+                která říká, že Clothoid křivku lze aproximovat polynomem třetího stupně
+                    \begin{equation}
+                        y = k x^{3},
+                    \end{equation}
+                což značně zjednoduší budoucí výpočty z původní numerické integrace.
+                    %\todo{https://cs.wikipedia.org/wiki/Klotoida#/media/Soubor:Cornu_Spiral.svg}
+                
+            \subsection{Extrakce značení cesty}
+                %https://stackoverflow.com/questions/48469889/how-to-fit-a-polynomial-with-some-of-the-coefficients-constrained
+                %https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.fit.html#numpy.polynomial.polynomial.Polynomial.fit
+                Vzhledem k různorodému dopravnímu značení nejen v jednotlivých státech, ale i jeho stavu v oblastech samotných států je obtížné navrhnout algoritmus spolehlivě detekující potřebné hranice cesty. Kromě samotného prostředí mohou mít na kvalitu značení vliv i parametry jako jsou stíny, déšť nebo samotná kvalita či opotřebení viz. Obrázek \ref{pic:line_quality}. To můžou být důvody proč například jednoduché metody na bázi hranové detekce selžou. 
+                
+                	\begin{figure}[h]
+                		\centering
+                		\includegraphics[width=.75\textwidth]{Graphics/lane_quality.png}
+                		\caption{Fotografie různých variant stavu značení nebo podmínek. Cesta (a) zobrazující optimální plnou a přerušovanou čáru, (b) nejednolitý povrch vozovky, (c) , (d), (e), (f)...\textbf{Mám to tady nechat nebo jen odkázat na článek, kde jsem to našel?}}
+                		\label{pic:line_quality}
+                	\end{figure}
+                
+                I přes použití robustnějších metod se naráží na komplikace zejména při zastínění části obrazu nejednolitým stínem \cite{VIOLET}. Podobně jako u volby modelu cesty může vznikat problém při nasazování jednotlivých algoritmů v nejrůznějších prostředí. Proto je vhodné optimalizovat detekci čar na omezenou oblast a získat tak kvalitnější výsledky v definovaném prostředí.
+                
+                Díky vysokému kontrastu silničního značení jsou obvykle pro jejich nalezení používány hranové detektory. Pro praktickou ukázku byla zvolena metoda tzv. steerable filters \cite{steerable_filters}, které detekují hrany v požadovaném směru. Aplikace těchto filtrů probíhá konvolucí obrázku s jádrem (kernelem) viz Obrázek \ref{pic:convolution} blíže popsán v článku \cite{2D_convolution}. Abychom ho získali, je potřeba derivovat kruhově symetrické jádro s Gaussovým rozložením viz. \ref{pic:Gauss_kernel}. To se používá velmi často k vyhlazování a rozostřování obrázků pro odstranění šumu. Vypočte se pomocí rovnice
+	                \begin{equation}
+	                    g(x,y)=a\cdot\exp{\left(-\left(\frac{(x-x_{0})^{2}}{2\sigma_{X}^{2}}+\frac{(y-y_{0})^{2}}{2\sigma_{Y}^{2}}\right)\right)},\\
+	                \end{equation}
+                kde \(x_{0}\) a \(y_{0}\) jsou střední hodnoty\\
+                \(\sigma_{X}\) a \(\sigma_{Y}\) jsou rozptyly\\
+                \(a\) je amplituda.
+                
+                Derivací daného jádra, vznikne orientované jádro neboli steerable filter. V závislosti na směru derivace se mění jeho působení a rozptylem \(\sigma\) je ovlivňována jeho intenzita. V literatuře se lze také setkat s jinými jádry detekujícími hrany v určitém směru např. Sobel filtrem \cite{sobel_filter_history}, který je velikosti 3x3 a jednu jeho formu pro \(x\) lze vidět na Obrázku \ref{pic:convolution}.
+                
+	                \begin{figure}[ht]
+	                    \centering
+	                    \includegraphics[width=.8\textwidth]{./Graphics/convolution.pdf}
+	                    \caption{Vizualizace základní konvoluce na 2D matici reprezentující obrázek.}
+	                    \label{pic:convolution}
+	                \end{figure}
+                
+                	\begin{figure}[ht]
+                		\centering
+                		\includegraphics[width=\textwidth]{./Graphics/Gauss_kernel_complete.eps}
+                		\caption{Vizualizace Gaussova kruhově symetrického jádra (nalevo) a jeho derivace podle \(x\) (napravo) ve 3D i 2D perspektivě.}
+                		\label{pic:Gauss_kernel}
+                	\end{figure}
+                
+                Aplikace zmíněného filtru detekuje v obrázku silnice místa s největším gradientem v daných směrech. Bohužel zde nastává problém nežádoucího šumu zmíněného na počátku této sekce.
+                
+            \subsection{Postprocessing}\label{chap:01_postprocessing}
+                Postprocessing\footnote{závěrečná úprava finálního výstupu} je nezbytnou součástí algoritmického řešení, neboť právě zde se detekované čáry zpracovávají a transformují do dále použitelných dat. Jedním z rozšířených metod je aplikace Houghovy transformace, která dokáže najít čáru i přes její horší viditelnost. Nicméně používají se i jiné metody, které dokážou plnit zásadní roli mostu mezi extrakcí značení samotným jeho sledováním.
+                
+                V této práci je použit přístup spočívající v hledání čáry pomocí klouzavých okének. Ten spočívá ve stanovení počátku detekované čáry zpravidla za použití histogramu a dále postupnému skládání okének na sebe s korekcí podle směru detekovaného shluku pixelů reprezentující čáru. Takto nalezené shluky uvnitř okének jsou proloženy kubickou rovnicí za pomoci minimalizace kritéria nejmenších čtverců \cite{polyfit}. Zprůměrováním získaných rovnic pro jednotlivé křivky vznikne rovnice popisující ideální trasu uprostřed detekovaných čar.
+                
+                Protože jsou parametry polynomu známé, z vlastností křivky lze určit polohu počátku při dolní hranici obrazu a za pomoci derivace získat i její tečnu. Ta udává informaci o relativním natočení vozítka vzhledem k nalezené ideální trase. Tyto hodnoty budou sloužit jako vstup do regulátoru.
+                
+            \subsection{Ovládání pohybu vozítka}
+            	Pro samotný pohyb je potřeba hodnoty z minulé sekce transformovat na akční zásah akceptovatelný softwarem vozítka. V případě modelového příkladu jsou k dispozici dva akční zásahy v rozsahu \(<-1,1\), jeden pro každý motor odpovídajícího kola.
+            	
+                Použití výstupu detekce přímo k řízení vozidla není vhodné pro jeho šum nebo chybné detekce. Lepších výsledků je možné dosáhnout použitím regulátoru ke sledování reference v podobě polohy ideální trasy. K dispozici jsou dva vstupy a to natočení vozidla od tečny ideální trasy a jeho vzdálenost od počátku křivky při dolním okraji obrazu. To jsou dva parametry, které jsou důležité pro regulaci a protože se navzájem ovlivňují, zavedeme oba tyto parametry jako vstup do regulátoru.
+                
+                Zde narážíme na problém, kdy jeden regulátor může zpracovávat pouze jeden vstup. Volíme tedy kaskádní zapojení dvou regulátorů viz. \ref{pic:regulator_schema}. Vnější regulátor zde bude mít jako vstup úhel natočení křivky a vnitřní vzdálenost od středu obrazu. Docílíme tak priority regulace natočení vozidla, která má zásadní vliv na funkčnost regulace.
+                
+                Popsaná regulace je velmi základní a tato práce se nebude zabývat složitějšími způsoby regulace jakožto i plánováním trasy, protože se jedná o náročnější a komplexnější problém nad rámec této bakalářské práce. V principu ale díky znalosti o pohybu vozidla v prostoru a dodatečnými informacemi o rychlosti nebo zrychlení lze škálovat zde pojednávanou problematiku k přesnější a jistější regulaci na požadovanou trajektorii.
+                
+                \begin{figure}[h]
+                	\centering
+                	\includegraphics[width=.9\textwidth]{Graphics/loading.jpg}
+                	\caption{Blokové schéma navrženého kaskádního regulátoru s dvěma vstupy.}
+                	\label{pic:regulator_schema}
+                \end{figure}
+            
+        \section{Reinforcement learning řešení}
+            Reinforcement learning známý také jako zpětnovazebné učení je specifický přístup strojového učení řešící daný problém bez přímého zásahu člověka na základě maximalizace zisku odměn přidělovaných za co nejlepší splnění specifický podmínek.
+            
+            Základní struktura se skládá z agenta a prostředí. Agent je algoritmus, který volí jednotlivé kroky a interaguje s prostředím, které reprezentuje model daného problému a vrací aktuální stav (reakci na danou akci) spolu s odměnou za danou akci. Tato odměna je dána tzv. reward funkcí, specifikovanou podle řešeného problému. Například při použití prostředí ze hry, kde je potřeba sbírat dané předměty pro vítězství může být analogií k odměnám skóre daného hráče (agenta) a reward funkce zde bude počítat dosažené předměty a jejich individuální hodnotu. Pokud by tedy agent chtěl maximalizovat odměnu za danou hru může se stát, že bude sbírat pouze nejhodnotnější předměty, aby co nejrychleji nabyl nejvyšší odměny.
+            
+            Jak je patrné z předešlého příkladu, hlavním parametrem ovlivňující chování agenta je reward funkce. Ta musí být správně specifikována a implementována, čímž se vytyčí priority, které se má agent naučit. Pokud například nezahrneme čas v podobě záporné odměny za uplynulé sekundy, nelze očekávat že prioritou pro agenta bude nasbírat odměny rychle.
+            
+            Další důležitou volbou je struktura samotného agenta. Existují dvě možnosti. Buď implementací algoritmu nebo pomocí neuronové sítě. Algoritmus si bude pamatovat akce nebo jejich posloupnosti s nejvyšší hodnotou aby je byl schopen později aplikovat sám mimo fázi učení. Neuronová síť bude na základě odměn nastavovat své vnitřní parametry a výsledkem učení bude natrénovaný model schopný hrát danou hru nebo řešit problém. V dalších odstavcích se bude text věnovat primárně přístupu pomocí NN\textbf{ neboť se jedná o modernější přístup - VYPUSTIT?}.
+            
+            Při použití NN se používá buď učení s učitelem a nebo bez učitele , ale dle \cite[p.~2]{RLbook} nespadá RL ani do jedné třídy jelikož učení zde stojí na přímé interakci s prostředím a zároveň se nesnaží najít strukturu v poskytnutých datech ale maximalizovat odměnu jako výsledek uskutečněných akcí.
+            
+            Pro použití RL v oblasti autonomního řízení existuje více základních struktur a přístupů k řešení specifických problémů jak je popsáno ve článku \cite{Deep_RL_survey}. \textbf{TADY JSEM SKONCIL!!!!} jako je Q-learning prvně zmíněný v článku \cite{vanilla_Q-learning}, jeho varianty DQN. Základní možnosti návrhu struktury lze rozdělit na dva přístupy, tzv. Value based a Policy based.
+            
+            Při použití jednoho RL agenta se při formalizaci dle \cite{Deep_RL_survey, RLbook} považuje za standard Markovův rozhodovací proces (MDP). Ten se skládá ze sady stavů \(S\), akcí \(A\), přechodové (transakční) funkce \(T\) a funkce odměny \(R\), které tvoří uspořádanou čtveřici \((S, A, T, R)\). Následně pokud ve stavu \(s \in S\) bude zvolena akce \(a \in A\) vznikne nový stav \(s' \in S)\) s pravděpodobností přechodu \(T(s,a,s') \in (0,1)\) a odměnou \(r \in R(s,a)\). Stochastická policy (strategie) \(\pi : S \rightarrow \mathscr{D}\) transformuje prostor stavů na podmíněnou pravděpodobnost jednotlivých akcí za podmínky stavu \(s\), tedy \(\pi(a|s)\). Cílem je tedy nalézt optimální policy (strategii) \(\pi^{*}\) která bude maximalizovat pro všechny stavy \(s \in S\) sum of discounted rewards:
+            	\begin{equation}
+            		\pi^{*} = \arg \max_{\pi} \mathbb{E}_{\pi} \left\{\sum_{k=0}^{H-1}\gamma^{k}r_{k+1} | s_{0}=s\right\},
+            	\end{equation}
+            kde \(\gamma \in [0,1]\) je discount factor rozhodující o váze budoucích odměn, \(r_{k}=R(s_{k}, a_{k})\) je odměna v čase \(k\), \(H\) je počet časových kroků a \(\mathbb{E} [.]\) značí očekávanou hodnotu náhodné proměnné.
+            
+            S výše zmíněnou strategií souvisí důležitý koncept action-value funkce tzv. Q-funkce:
+            	\begin{equation}
+            		Q_{\pi}(s,a) = \mathbb{E}_{\pi} \left\{\sum_{k=0}^{H-1}\gamma^{k}r_{k+1} | s_{0}=s, a_{0}=a\right\}
+            		\label{eqn:Q-function}
+            	\end{equation}
+            % zdroj k RL https://arxiv.org/pdf/1811.11329.pdf
+            \subsection{Value based}
+	            Q-learning je jeden z nejpoužívanějších RL algoritmů, který se učí za pomoci odhadu vlivu dvojice stavu \(s\) a akce \(a\) (viz. rovnice \ref{eqn:Q-function}). Tato metoda má výhodu, že nepotřebuje model daného prostředí, při trénování totiž dochází k hledání optimální hodnot \(Q\) přímo z interakcí s prostředím. Policy\footnote{strategie pro pohyb v daném prostředí dávající pravděpodobnost dané akce podle výše odměny} má svou optimální action-value Q-funkci\ref{eqn:Q-function}, která je definována jako
+	                \begin{equation}
+	                    Q^{*}(s,a)= \max_{\pi}Q_{\pi}(s,a),
+	                \end{equation}
+	            Při trénování jde tedy o objevení optimální policy za pomoci nalezení optimální Q-funkce. To je umožněno díky Bellmanovu principu optimality, který vyjadřuje fakt, že budoucí hodnota stavu podle optimální policy se musí rovnat očekávanému stavu při aplikaci nejlepší akce ze všech možných
+	                \begin{eqnarray}
+	                	q^{*}(s,a)&=&\mathbb{E}[R(s_{k+1},a_{k+1}) + \gamma\cdot\max_{a \in A(s)}q_{\pi}^{*}(s_{k+1},a_{k+1}) | s_{k} = s, a_{k} = a]\\
+	                	&=& \sum_{s', r}p(s', r|s, a)\left[r+\gamma\max_{a'}Q^{*}(s',a')\right],
+	                \end{eqnarray}      
+	            díky které lze stanovit vhodnou akci v daném stavu \(s\), která povede na největší možnou hodnotu v budoucím stavu \(s'\) přes všechny možné akce \(a'\) a při dostatečném počtu opakování konverguje k optimální Q-funkci. Podrobněji tento problém popisuje \cite[p.~63]{RLbook}.  
+            \subsection{Policy based}
+	            Na rozdíl od předešlé metody, která se soustředí na nalezení optimální policy za pomoci maximalizace kumulativní odměny (Q-funkce), tato ji hledá přímo a kumulativní odměna je až sekundárním parametrem, pokud je vůbec vypočítána. Typicky je policy reprezentována jako neuronová síť a k nalezení jejích parametrů slouží metoda poklesu gradientu (gradient descent) v prostoru stavů a akcí pro maximalizaci očekávané odměny.
+	            
+	            Umožňuje navíc fungovat v prostředí se spojitými akcemi, což není ve value based možné pokud předpokládáme, že všechny akce ve stavech nejsou navzorkovány s nekonečně malou periodou. U nich se běžně určuje pravděpodobnost diskrétních akcí a na jejich základě se pak vykonávají.
+            
+            \subsection{Actor-critic}
+            		
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.5\textwidth]{Graphics/loading.jpg}
+            			\caption{Schéma RL metody actor-critic.}
+            			\label{pic:actor_critic}
+            		\end{figure}
+            		
+	            Tato metoda je v podstatě kombinací předchozích struktur. Skládá se ze dvou propojených bloků, actor (policy-based) a critic (value-based) viz Obrázek \ref{pic:actor_critic}, kde actor zastupuje část agenta, který predikuje a provádí akce v prostředí a critic predikuje odměnu za daný krok v daném stavu. Oba bloky fungují paralelně a jsou na sobě vzájemně závislé. Actor bere jako vstup stav prostředí a jako výstup volí akci. Critic má složitější strukturu. Jako vstup bere aktuální stav prostředí a akci vybranou actorem. Výstupem je predikovaná hodnota odměny.
+	            
+	            Při trénování se postupuje postupně z fáze objevování (exploration) do využívání(exploitation) přičemž se zmenšuje náhodný šum přidávaný k akcím. Po daném počtu epoch se upraví struktura actora aplikací parametrů critica, který se snaží najít optimální Q-funkci minimalizující kumulativní ztrátovou funkci odměn, zatímco actor se snaží volit správnou akci pomocí poklesu gradientu. Výhodou je, že dokáže zpracovávat spojité vstupy a reagovat spojitými akčními zásahy, což je výhodné při aplikaci na hraní her, které zmíněné vstupy vyžadují.
+	            
+        	\subsection{Nevýhody}
+        		Přes značné výhody RL přístupu, který nepotřebuje žádný model ani trénovací dataset se pojí několik negativ. Při trénování výše zmíněných modelů je potřeba stanovení správné funkce odměny, která má ve většině případů zásadní vliv na funkčnost a je potřeba dopředu myslet na striktní omezení a požadavky na agenta. Dále může být problematické samotné prostředí, ve kterém se bude pohybovat. V případě chyb nebo porušení pravidel je potřeba agenta resetovat do startovní pozice, což může být ve fyzickém prostředí problém. Posledním hlavním problémem je délka trénování v případě operace agenta v prostředí s reálným časem.
+            
+        \section{Řešení pomocí hlubokého učení}
+        	S nedávným nárůstem výpočetního výkonu a optimalizace specifického hardwaru se stalo hluboké učení dostupnější. Vznikem frameworků jako je PyTorch, Keras a TensorFlow pro práci se strukturami neuronových sítích v populárních programovacích jazycích se zpřístupnila a zjednodušila práce s nimi. Nebylo již nutné programovat vlastní funkce a metody a tak se více lidí mohlo zapojit do vývoje složitějších architektur a soustředit se na stavbu samotných neuronových sítí. Dnes již existuje spoustu návodů i mimo výzkumné práce, ať už specifických pro zmíněné frameworky a nebo těch sdílených komunitou.
+            
+            \textbf{Nějaký úvod do principu neuronových sítí a hlubokého učení?}
+            
+            
+            
+            Ačkoliv se jedná o metodu založenou na neuronových sítích, jejich konstrukci, modelech a náročnému trénování, stále ke svému fungování využívá již dříve zmíněné algoritmy zejména pro přípravu vstupních dat a nebo úpravu výstupu pro další použití. 
+    	\section{Problematika prostředí}
+    		Popis toho jak má negativní vliv různé standardy napříč světem v komunikacích a jaký mají vliv nepředvídatelné akce účastníků provozu.
+	% _____________________________________________________________________________
+	%
+	%
+	%        CHAPTER
+	%
+	% _____________________________________________________________________________
+	%
+    \chapter{Simulátory a datasety}
+    	\section{Simulátory}
+    		\subsection{Gym-duckietown}
+    			kde najdu, instalace apod.
+    	\section{Datasety}
+    		\subsection{duckietown}
+	% _____________________________________________________________________________
+	%
+	%
+	%        CHAPTER
+	%
+	% _____________________________________________________________________________
+	%
+    \chapter{Praktická část - řešení}
+        Bla bla úvod do praktické části.
+        \section{Použité prostředky}
+            Jako základní HW, který byl uvažován pro demonstrační modelové příklady byl dvoukolový robot ovládaný jednodeskovým počítačem Jetson Nano B01 \textbf{přidat obrázek} dodaný jako set od firmy Sparkfun.
+            \textbf{použitý HW a SW}
+        \section{Algoritmické řešení}
+        \textbf{zmínit předzpracování}
+            \subsection{Extrakce značení cesty}
+            	Použité filtry sice odstraní hrany v nežádoucích směrech, ale kromě nich odhalí a zviditelní hrany, které jsou ve stejném směru, ale působí jako šum. Toho se lze zbavit díky aplikace masky vytvořené dle hledané barvy. Aby se dala barva pohodlně vybrat, transformuje se obrázek z typického RGB do HSV spektra (rozdíl na Obrázku \ref{pic:HSV_spektrum}), kde jsou jednotlivé pixely popsány, ale odstínem barvy H (hue), sytostí S (saturation) a intenzitou V (value) (viz. obrázek \ref{pic:HSV_spektrum}). V tomto prostředí lze pak snadno nastavit rozmezí hledané barvy, její intenzity a sytosti a dvojím prahováním\footnote{Nalezení hodnot vyhovujících daným podmínkám} vytvořit binární\footnote{Data obsahující pouze dvě hodnoty, obvykle (\(0\),\(1\)) nebo (\verb"True",\verb"False")} masku s informací o pozici jednotlivých pixelů požadované barvy.\\
+            	\begin{figure}[ht]
+            		\centering
+            		\includegraphics[width=.75\textwidth]{./Graphics/RGB_mixing.png}
+            		\caption{RGB spektrum.}
+            	\end{figure}
+            	
+            	\begin{figure}[ht]
+            		\centering
+            		\includegraphics[width=.75\textwidth]{./Graphics/Triangulo_HSV.png}
+            		\caption{HSV spektrum.}
+            		\label{pic:HSV_spektrum}
+            	\end{figure}
+            	%Autor: Samus_ – Vlastní dílo, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=1302915
+            	
+            	Prvkovým násobením masky výskytu hledané barvy s orientací hran z detekce vznikne průnik obou požadavků. Tato nová binární maska bude využita pro další zpracování v následující části \ref{chap:01_postprocessing}.
+            	
+            	
+                V této fázi nastává chvíle, kdy z obrazových dat extrahujeme potřebná data o směru detekované cesty a její relativní polohy vůči vozítku. Ke stanovení těchto údajů využijeme všechny dříve zmíněné informace. Jako vstup použijeme masku získanou extrakcí cesty v předešlé fázi. Maska ale stále obsahuje šum, který se nepovedlo odstranit a proto se omezíme na dolní část masky a tvorbou histogramu \textbf{součet přes sloupce} získáme jasně viditelné vrcholky, kde se nachází počátek hledaných pruhů nejblíže vozítku. Vybereme tyto dva vrcholky jako startovní body pro následné hledání průběhu jednotlivých pruhů. To probíhá postupným vykreslováním obdélníků přes detekované čáry. Šířka ohraničení je rovná toleranci hledání a výška je zvolena s ohledem na vyvážení výpočetní náročnosti a přesnosti. Pokud dojde v daném řádku k vybočení bodů detekované čáry o stanovený počet pixelů, změní se pozice obdélníku, aby jeho střed byl uprostřed vybočené čáry z přímého směru. Tento proces opakujeme dokud nedosáhneme výšky snímku. Jednotlivé pixely ohraničené obdélníky označíme a spustíme nad nimi algoritmus, který proloží body křivkou. Jelikož víme, že většina cest bývá navrhována za pomoci Clothoid křivek, které lze s mírnou chybou aproximovat kubickou křivkou viz. rovnice \ref{eqn:dukaz_aproximace_clothoidu_polynomem_3st}, proložíme jí označené body. Získané parametry jsou koeficienty jednotlivých křivek. jejich průměrem nalezneme střed cesty s jeho vlastními koeficienty a tuto křivku budeme považovat za ideální trajektorii průjezdu cestou. Ze znalosti obecného tvaru kvadratické rovnice a jejích vlastností určíme tečnu jako \textbf{rovnice pro tečnu a kvadratickou rovnici a lineární rovnici}. Z parametrů tečny získáme polohu středu cesty a její tečnu v daném bodu a tedy ideální polohu vozítka v daném bodě. Tato informace je potřebným vstupem pro regulátor, který bude způsobovat akční zásahy vozítka. Použité vozítko bohužel nemá enkodéry a nejsou tak k dispozici informace o poloze nebo rychlosti. Data z obrazu jsou však díky kameře snímána kousek před vozítkem a jedná se tedy o ideální budoucí pozici, které se musí vozítko snažit přiblížit.
+            \subsection{Regulace pohybu}
+                Jelikož vozítko nemá k dispozici senzor k měření polohy ani rychlosti, jsou možnosti řízení omezené. Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charkteristice motorů, ale také valivému odporu mezi kolem a podložkou.\\
+                Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální budoucí trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na obrázku \ref{pic:regulator_schema}, kdy vnější regulátor bere jako vstup diferenci polohy vozítka od trajektorie. Tato diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu.  Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je pak dále použit jako vstup vnitřního. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme vycentrování vozítka na požadovanou budoucí trajektorii.\\
+                Použité regulátory byly oba typu \(PI\), kde k nastavování parametrů byla použita metoda třetin na rovném úseku testovací trajektorie.
+                
+                Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charakteristice motorů, ale také valivému odporu mezi kolem a podložkou.\\
+                Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na obrázku \ref{pic:regulator_schema}, kdy vnější regulátor použije jako vstupní signál diferenci polohy vozítka od trajektorie. Tato diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu.  Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je dále použit jako vstup vnitřního regulátoru. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme vycentrování vozítka na požadovanou trajektorii.\\
+                Použité regulátory byly oba typu \(PI\), kde k nastavování parametrů byla použita metoda třetin na rovném úseku testovací trajektorie.
+                 
+                \textbf{opravit informace o regulátoru a jakým způsobem pracuje a jak byl navržen apod.....mrknout na jetbota}
+        \section{Deep learning řešení - segmentace}
+        \section{Zhodnocení}
+        	\textbf{Porovnání prakticky realizovaných metod}
+	% _____________________________________________________________________________
+	%
+	%
+	%        CHAPTER
+	%
+	% _____________________________________________________________________________
+	%
+    \chapter{Závěr}
+        \section{Shrnutí}
+            neco
+                    
+    % _____________________________________________________________________________
+    %
+    %
+    %        BACK MATTER (BIBLIOGRAPHY, LISTS, ...)
+    %
+    % _____________________________________________________________________________
+    %
+    \backmatter
+    \printbibliography
+    \listoffigures
+    \listoftables
+    \listoflistings
+    % _____________________________________________________________________________
+    %
+    %		BACK COVER
+    % _____________________________________________________________________________
+    %
+    \setbackpagesign{img/qr-code}
+    \backpage
+\end{document}

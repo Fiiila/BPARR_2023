@@ -1,7 +1,7 @@
 from zipfile import ZipFile, ZIP_DEFLATED
 from pathlib import Path
 
-if __name__=="__main__":
+if __name__ == "__main__":
     directory = Path("./BPARR_latex/")
 
     with ZipFile("BPARR_latex/BPARR_latex_sync/BPARR_latex.zip", "w", ZIP_DEFLATED, compresslevel=9) as archive:
