@@ -19,6 +19,58 @@ def load_camera_intrinsic(calib_path):
                     }
     return calib_params
 
+def create_steerable_filters(kernel_size, variance=(2,2), center=(0, 0), amplitude=1):
+    # 2D Gaussian
+    x = np.linspace(-(kernel_size-1)/2, (kernel_size-1)/2, kernel_size)
+    y = x.copy()
+    x0, y0 = center
+    varx, vary = variance
+    gauss_kernel = np.zeros((len(y), len(x)))
+    gauss_kernel_diff = np.zeros((len(y), len(x)))
+    for idy in range(len(y)):
+        for idx in range(len(x)):
+            gauss_kernel[idy, idx] = amplitude*np.exp(-((np.square(x[idx]-x0)/np.square(2*varx))+(np.square(y[idy]-y0)/np.square(2*vary))))
+            gauss_kernel_diff[idy, idx] = -(np.exp(-np.square(x[idx] - x0)/(2*varx) - np.square(y[idy] - y0)/(2*vary))*(2*x[idx] - 2*x0))/(2*varx)
+
+    tmp = np.gradient(gauss_kernel)
+    return gauss_kernel_diff
+
+def find_line_begining(img):
+    height, width = img.shape[:2]
+    # histogram for columns of image
+    histogram = np.sum(filter_im_bin[-height // 6:-1, :], axis=0)  # find beginning only in down half
+    middle = width // 2
+    # peaks = find_peaks(histogram, height = 255*(height//6)//8, distance = 20)
+    # instead of peaks
+    noOfRanges = 10
+    width_range = width // noOfRanges
+    prevRight = 0
+    left_line_base = 0
+    right_line_base = width
+    local_max = np.zeros((2, 2), dtype=int)
+    temp = 0
+    tempdist = 0
+    for i in range(0, noOfRanges):
+        temp = np.argmax([histogram[prevRight:prevRight + width_range]]) + prevRight
+        tempdist = temp - tempdist
+        if local_max[0, 1] < histogram[temp] and ((temp - local_max[0, 0]) > width_range) and (
+                (temp - local_max[1, 0]) > width_range):
+            if local_max[1, 1] < histogram[temp] and ((temp - local_max[0, 0]) > width_range) and (
+                    (temp - local_max[1, 0]) > width_range):
+                local_max[0, :] = local_max[1, :]
+                local_max[1, :] = np.array((temp, histogram[temp]), dtype=int)
+            else:
+                local_max[0, :] = np.array((temp, histogram[temp]), dtype=int)
+
+        prevRight += width_range
+
+    if local_max[0, 0] < local_max[1, 0]:
+        left_line_base = local_max[0, 0]
+        right_line_base = local_max[1, 0]
+    else:
+        left_line_base = local_max[1, 0]
+        right_line_base = local_max[0, 0]
+
 def generate_homographic_trans_mtx(img, chess_cols=7, chess_rows=5):
     # termination criteria
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -126,9 +178,27 @@ if __name__ == "__main__":
         # warp perspective
         img_warped = cv2.warpPerspective(img_crop, homograph_mtx, (w, h))
 
+        # convert image to grayscale for edge detection
+        img_gray = cv2.cvtColor(img_warped, cv2.COLOR_BGR2GRAY)
+
+        # create steerable filter
+        fltr = create_steerable_filters(kernel_size=10, variance=(8, 1), center=(0, 0))
+        # gaussian blurring
+        kernel = np.ones((10, 10), np.float32) / 100
+        img_gray = cv2.filter2D(img_gray, -1, kernel)
+
+        # feature extraction
+        filter_im = cv2.filter2D(src=img_gray, ddepth=-1, kernel=fltr)
+        # binary thresholding
+        thr_bin, filter_im_bin = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)#(filter_im >= thr_bin)*255.0
+
+
+
         # display output
+        cv2.imshow(winname="gray blurred features image", mat=img_gray)
+        cv2.imshow(winname="extracted features image", mat=filter_im_bin)
         cv2.imshow(winname="cropped image", mat=img_crop)
-        cv2.imshow(winname="cropped image", mat=img_warped)
+        cv2.imshow(winname="warped image", mat=img_warped)
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             break
