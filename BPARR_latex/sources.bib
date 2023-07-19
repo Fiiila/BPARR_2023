@@ -184,3 +184,117 @@
 	keywords = {Actor–critic reinforcement learning algorithms, Policy-gradient methods, Approximate dynamic programming, Function approximation, Two-timescale stochastic approximation, Temporal difference learning, Natural gradient},
 	abstract = {We present four new reinforcement learning algorithms based on actor–critic, natural-gradient and function-approximation ideas, and we provide their convergence proofs. Actor–critic reinforcement learning methods are online approximations to policy iteration in which the value-function parameters are estimated using temporal difference learning and the policy parameters are updated by stochastic gradient descent. Methods based on policy gradients in this way are of special interest because of their compatibility with function-approximation methods, which are needed to handle large or infinite state spaces. The use of temporal difference learning in this way is of special interest because in many applications it dramatically reduces the variance of the gradient estimates. The use of the natural gradient is of interest because it can produce better conditioned parameterizations and has been shown to further reduce variance in some cases. Our results extend prior two-timescale convergence results for actor–critic methods by Konda and Tsitsiklis by using temporal difference learning in the actor and by incorporating natural gradients. Our results extend prior empirical studies of natural actor–critic methods by Peters, Vijayakumar and Schaal by providing the first convergence proofs and the first fully incremental algorithms.}
 }
+
+@article{LeNet-5,
+	author={Lecun, Y. and Bottou, L. and Bengio, Y. and Haffner, P.},
+	journal={Proceedings of the IEEE}, 
+	title={Gradient-based learning applied to document recognition}, 
+	year={1998},
+	volume={86},
+	number={11},
+	pages={2278-2324},
+abstract={Multilayer neural networks trained with the back-propagation algorithm constitute the best example of a successful gradient based learning technique. Given an appropriate network architecture, gradient-based learning algorithms can be used to synthesize a complex decision surface that can classify high-dimensional patterns, such as handwritten characters, with minimal preprocessing. This paper reviews various methods applied to handwritten character recognition and compares them on a standard handwritten digit recognition task. Convolutional neural networks, which are specifically designed to deal with the variability of 2D shapes, are shown to outperform all other techniques. Real-life document recognition systems are composed of multiple modules including field extraction, segmentation recognition, and language modeling. A new learning paradigm, called graph transformer networks (GTN), allows such multimodule systems to be trained globally using gradient-based methods so as to minimize an overall performance measure. Two systems for online handwriting recognition are described. Experiments demonstrate the advantage of global training, and the flexibility of graph transformer networks. A graph transformer network for reading a bank cheque is also described. It uses convolutional neural network character recognizers combined with global training techniques to provide record accuracy on business and personal cheques. It is deployed commercially and reads several million cheques per day.},
+	doi={10.1109/5.726791},
+	ISSN={1558-2256},
+	month={11},
+}
+
+@inproceedings{ImageNet,
+	author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+	booktitle = {Advances in Neural Information Processing Systems},
+	editor = {F. Pereira and C.J. Burges and L. Bottou and K.Q. Weinberger},
+	publisher = {Curran Associates, Inc.},
+	title = {ImageNet Classification with Deep Convolutional Neural Networks},
+	url = {https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf},
+	volume = {25},
+	year = {2012}
+}
+
+@misc{VGG-16,
+	title={Very Deep Convolutional Networks for Large-Scale Image Recognition}, 
+	author={Karen Simonyan and Andrew Zisserman},
+	year={2015},
+	eprint={1409.1556},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	doi={https://doi.org/10.48550/arXiv.1409.1556}
+}
+
+@misc{Inception-v3,
+	title={Rethinking the Inception Architecture for Computer Vision}, 
+	author={Christian Szegedy and Vincent Vanhoucke and Sergey Ioffe and Jonathon Shlens and Zbigniew Wojna},
+	year={2015},
+	eprint={1512.00567},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	doi={https://doi.org/10.48550/arXiv.1512.00567}
+}
+
+@misc{ResNet-50,
+	title={Deep Residual Learning for Image Recognition}, 
+	author={Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+	year={2015},
+	eprint={1512.03385},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	doi={https://doi.org/10.48550/arXiv.1512.03385}
+}
+
+@misc{Network_in_network,
+	title={Network In Network}, 
+	author={Min Lin and Qiang Chen and Shuicheng Yan},
+	year={2014},
+	eprint={1312.4400},
+	archivePrefix={arXiv},
+	primaryClass={cs.NE},
+	doi={https://doi.org/10.48550/arXiv.1312.4400}
+}
+
+@INPROCEEDINGS{YOLO,
+author={Redmon, Joseph and Divvala, Santosh and Girshick, Ross and Farhadi, Ali},
+booktitle={2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+title={You Only Look Once: Unified, Real-Time Object Detection}, 
+year={2016},
+pages={779-788},
+abstract={We present YOLO, a new approach to object detection. Prior work on object detection repurposes classifiers to perform detection. Instead, we frame object detection as a regression problem to spatially separated bounding boxes and associated class probabilities. A single neural network predicts bounding boxes and class probabilities directly from full images in one evaluation. Since the whole detection pipeline is a single network, it can be optimized end-to-end directly on detection performance. Our unified architecture is extremely fast. Our base YOLO model processes images in real-time at 45 frames per second. A smaller version of the network, Fast YOLO, processes an astounding 155 frames per second while still achieving double the mAP of other real-time detectors. Compared to state-of-the-art detection systems, YOLO makes more localization errors but is less likely to predict false positives on background. Finally, YOLO learns very general representations of objects. It outperforms other detection methods, including DPM and R-CNN, when generalizing from natural images to other domains like artwork.},
+keywords={},
+doi={10.1109/CVPR.2016.91},
+ISSN={1063-6919},
+month={6},
+}
+
+@INPROCEEDINGS{R-CNN,
+	author={Girshick, Ross and Donahue, Jeff and Darrell, Trevor and Malik, Jitendra},
+	booktitle={2014 IEEE Conference on Computer Vision and Pattern Recognition}, 
+	title={Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation}, 
+	year={2014},
+	pages={580-587},
+	abstract={Object detection performance, as measured on the canonical PASCAL VOC dataset, has plateaued in the last few years. The best-performing methods are complex ensemble systems that typically combine multiple low-level image features with high-level context. In this paper, we propose a simple and scalable detection algorithm that improves mean average precision (mAP) by more than 30\% relative to the previous best result on VOC 2012 -- achieving a mAP of 53.3\%. Our approach combines two key insights: (1) one can apply high-capacity convolutional neural networks (CNNs) to bottom-up region proposals in order to localize and segment objects and (2) when labeled training data is scarce, supervised pre-training for an auxiliary task, followed by domain-specific fine-tuning, yields a significant performance boost. Since we combine region proposals with CNNs, we call our method R-CNN: Regions with CNN features. We also present experiments that provide insight into what the network learns, revealing a rich hierarchy of image features. Source code for the complete system is available at http://www.cs.berkeley.edu/~rbg/rcnn.},
+	doi={10.1109/CVPR.2014.81},
+	ISSN={1063-6919},
+	month={6},
+}
+
+@misc{U-Net,
+	title={U-Net: Convolutional Networks for Biomedical Image Segmentation}, 
+	author={Olaf Ronneberger and Philipp Fischer and Thomas Brox},
+	year={2015},
+	eprint={1505.04597},
+	archivePrefix={arXiv},
+	primaryClass={cs.CV},
+	doi={https://doi.org/10.48550/arXiv.1505.04597}
+}
+
+@article{semantic_segmentation_survey,
+	title = {A Brief Survey on Semantic Segmentation with Deep Learning},
+	journal = {Neurocomputing},
+	volume = {406},
+	pages = {302-321},
+	year = {2020},
+	issn = {0925-2312},
+	doi = {https://doi.org/10.1016/j.neucom.2019.11.118},
+	url = {https://www.sciencedirect.com/science/article/pii/S0925231220305476},
+	author = {Shijie Hao and Yuan Zhou and Yanrong Guo},
+	keywords = {Semantic segmentation, Deep learning},
+	abstract = {Semantic segmentation is a challenging task in computer vision. In recent years, the performance of semantic segmentation has been greatly improved by using deep learning techniques. A large number of novel methods have been proposed. This paper aims to provide a brief review of research efforts on deep-learning-based semantic segmentation methods. We categorize the related research according to its supervision level, i.e., fully-supervised methods, weakly-supervised methods and semi-supervised methods. We also discuss the common challenges of the current research, and present several valuable growing research points in this field. This survey is expected to familiarize readers with the progress and challenges of semantic segmentation research in the deep learning era.}
+}

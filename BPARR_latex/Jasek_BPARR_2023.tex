@@ -277,7 +277,7 @@
             
             Při použití NN se používá buď učení s učitelem a nebo bez učitele , ale dle \cite[p.~2]{RLbook} nespadá RL ani do jedné třídy jelikož učení zde stojí na přímé interakci s prostředím a zároveň se nesnaží najít strukturu v poskytnutých datech ale maximalizovat odměnu jako výsledek uskutečněných akcí.
             
-            Pro použití RL v oblasti autonomního řízení existuje více základních struktur a přístupů k řešení specifických problémů jak je popsáno ve článku \cite{Deep_RL_survey}. \textbf{TADY JSEM SKONCIL!!!!} jako je Q-learning prvně zmíněný v článku \cite{vanilla_Q-learning}, jeho varianty DQN. Základní možnosti návrhu struktury lze rozdělit na dva přístupy, tzv. Value based a Policy based.
+            Pro použití RL v oblasti autonomního řízení existuje více základních struktur a přístupů k řešení specifických problémů jak je popsáno ve článku \cite{Deep_RL_survey}. Základní možnosti návrhu struktury lze rozdělit na dva přístupy, tzv. Value based a Policy based.
             
             Při použití jednoho RL agenta se při formalizaci dle \cite{Deep_RL_survey, RLbook} považuje za standard Markovův rozhodovací proces (MDP). Ten se skládá ze sady stavů \(S\), akcí \(A\), přechodové (transakční) funkce \(T\) a funkce odměny \(R\), které tvoří uspořádanou čtveřici \((S, A, T, R)\). Následně pokud ve stavu \(s \in S\) bude zvolena akce \(a \in A\) vznikne nový stav \(s' \in S)\) s pravděpodobností přechodu \(T(s,a,s') \in (0,1)\) a odměnou \(r \in R(s,a)\). Stochastická policy (strategie) \(\pi : S \rightarrow \mathscr{D}\) transformuje prostor stavů na podmíněnou pravděpodobnost jednotlivých akcí za podmínky stavu \(s\), tedy \(\pi(a|s)\). Cílem je tedy nalézt optimální policy (strategii) \(\pi^{*}\) která bude maximalizovat pro všechny stavy \(s \in S\) sum of discounted rewards:
             	\begin{equation}
@@ -320,7 +320,7 @@
 	            
 	            Při trénování se postupuje postupně z fáze objevování (exploration) do využívání(exploitation) přičemž se zmenšuje náhodný šum přidávaný k akcím. Po daném počtu epoch se upraví struktura actora aplikací parametrů critica, který se snaží najít optimální Q-funkci minimalizující kumulativní ztrátovou funkci odměn, zatímco actor se snaží volit správnou akci pomocí poklesu gradientu. Výhodou je, že dokáže zpracovávat spojité vstupy a reagovat spojitými akčními zásahy, což je výhodné při aplikaci na hraní her, které zmíněné vstupy vyžadují.
 	            
-        	\subsection{Nevýhody}
+        	\subsection{Shrnutí}
         		Přes značné výhody RL přístupu, který nepotřebuje žádný model ani trénovací dataset se pojí několik negativ. Při trénování výše zmíněných modelů je potřeba stanovení správné funkce odměny, která má ve většině případů zásadní vliv na funkčnost a je potřeba dopředu myslet na striktní omezení a požadavky na agenta. Dále může být problematické samotné prostředí, ve kterém se bude pohybovat. V případě chyb nebo porušení pravidel je potřeba agenta resetovat do startovní pozice, což může být ve fyzickém prostředí problém. Posledním hlavním problémem je délka trénování v případě operace agenta v prostředí s reálným časem.
             
         \section{Řešení pomocí hlubokého učení}
@@ -328,9 +328,26 @@
             
             \textbf{Nějaký úvod do principu neuronových sítí a hlubokého učení?}
             
+           	Dnes již existuje spoustu architektur optimalizovaných pro řešení specifických problémů a tudíž není nutné samostatně vyvíjet vlastní a postačí upravit ty stávající. Pro oblast detekce pruhů z obrazu je vhodná kategorie tzv. Konvolučních neuronových sítí. Ty lze dále rozdělit na problém klasifikace, detekce a segmentace popsaných v násleujících sekcích.
+           	
+           	\subsection{Klasifikace obrazu} \label{subsec:klasifikace_obrazu}
+           		Jedná se o problematiku s nejjednodušší architekturou, která jako vstup bere matici reprezentující obrázek a jako výstup dává zpravidla pravděpodobnost předem definovaných kategorií. Jednou z nich je LeNet-5 \cite{LeNet-5} s pouhými 60000 parametry představená již v roce 1998. Její struktura se stala de facto standardní šablonou pro jiné mnohem větší sítě. I Když se jedná o nejjednodušší typy sítí, spadají sem také velké sítě jako AlexNet \cite{ImageNet} s 60M parametry nebo VGG-16 \cite{VGG-16} se 138M parametrů, které mají více vrstev a pracují s větším rozlišením vstupu, což může být v některých případech výhodné, ale značně náročné na HW zdroje. Od toho se odlišují například sítě Inception-v3 \cite{Inception-v3} na bázi technologie Network in network \cite{Network_in_network} nebo ResNet-50 \cite{ResNet-50} s použitím tzv. "skip connections" kombinující výstup předchozí vrstvy a výstupu současné. Jak je zřejmé, zvyšováním počtu parametrů došlo k saturaci přesnosti sítě a tak musely být aplikovány jiné metody pro její zlepšení.
+           	
+           	\subsection{Detekce objektů}\label{subsec:detekce_objektu}
+           		Detekční sítě jsou již komplikovanější struktury a od klasifikace se liší tím, že neklasifikují vstupní obraz jako celek ale hledají v něm požadované objekty. Výstupem tedy bude region vymezený v obraze obdélníkem, ohraničující nalezený objekt a třída. V případě více objektů bude výstupem ideálně odpovídající množství zmíněného výstupu.
+           		
+           		Detekci lze rozdělit na dvoustupňovou a jednostupňovou. Dvoustupňová se skládá z prvotní detekce samotných regionů, ve kterých jich je navrženo několik stovek a jejich následné seskupení do nejlepších z nich. Ty jsou poté transformovány na fixní velikost a pomocí konvoluční neuronové sítě klasifikovány do tříd viz. Obrázek \ref{pic:region_proposal}. Typický představitel je R-CNN \cite{R-CNN}.
+           		
+           		Jednostupňová detekce kombinuje výše zmíněné kroky do jediné konvoluční neuronové sítě (např. YOLO \cite{YOLO}), která predikuje regiony včetně pravděpodobnosti přítomnosti objektu a jejich tříd. To umožňuje rychlejší detekci než u předchozího typu.
+           	
+           	\subsection{Sémantická segmentace obrazu}
+            	Představena byla již metoda, která klasifikuje celý vstupní obraz viz. \ref{subsec:klasifikace_obrazu} a nebo v něm hledá individuální objekty \ref{subsec:detekce_objektu}. Tato se však zabývá klasifikací obrazu na mnohem nižší úrovni, konkrétně úrovni jednotlivých pixelů.
+            	
+            	Obecný princip lze popsat tak, že vstupem neuronové sítě je opět obrázek, který je propagován skrze tzv. encoder-decoder strukturu. V části decoder se z obrázku extrahují vlastnosti, které se použijí v decoderu, který zpětně vytvoří matici stejné velikosti jako je vstup jen v podobě masky. Ta obsahuje informace o třídách jednotlivých pixelů a při aplikaci jejího překrytí se vstupním obrázkem lze zjistit, jak která část obrázku byla klasifikována. Jako příklad architektury lze uvést například U-Net \cite{U-Net} původně navržen pro využití v biomedicíně, ale nadále využit i několika dalšími strukturami viz. článek \cite{semantic_segmentation_survey}. 
+            	
+            \subsection{Shrnutí}
+            	
             
-            
-            Ačkoliv se jedná o metodu založenou na neuronových sítích, jejich konstrukci, modelech a náročnému trénování, stále ke svému fungování využívá již dříve zmíněné algoritmy zejména pro přípravu vstupních dat a nebo úpravu výstupu pro další použití. 
     	\section{Problematika prostředí}
     		Popis toho jak má negativní vliv různé standardy napříč světem v komunikacích a jaký mají vliv nepředvídatelné akce účastníků provozu.
 	% _____________________________________________________________________________
