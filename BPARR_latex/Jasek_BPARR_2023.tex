@@ -358,11 +358,102 @@
 	% _____________________________________________________________________________
 	%
     \chapter{Simulátory a datasety}
+    	Nasazení nebo dokonce vývoj systémů pro autonomní řízení může být velmi problematický a nebezpečný. Mimo jiné je potřeba funkční prototyp vozidla s veškerými senzory a případně i volný prostor na testování, což se dokáže rychle projevit na potřebných financích.
+    	
+    	Naštěstí se většina zmíněných nákladů a problémů dá omezit použitím simulačního softwaru, který dokáže poskytnout jak prostředí, tak senzory a navíc i referenční hodnoty přesného pohybu, kolizí s okolím apod. Výdaje na prvotní testování se tak omezí na minimum. Pro plynulé simulace je však potřeba dostatečně výkonný HW s dedikovanou grafickou kartou, protože dochází při jejím běhu k paralelním výpočtům i dalších pohledů senzorů viz \ref{pic:air_sim_ukazka}, což dokáže PC značně zatížit.
+    	
+    	Následující výběr simulátorů byl sestaven tak, aby byly snadné a rychlé ke spuštění, nevyžadovaly přihlašování pro přístup, fungovaly lokálně a nejlépe jak na platformě Linux, tak i Windows.
     	\section{Simulátory}
     		\subsection{Gym-duckietown}
-    			kde najdu, instalace apod.
+    			Prvním simulátorem je gym-duckietown, který vznikl na bázi projektu Duckietown\footnote{\href{https://www.duckietown.org/}{https://www.duckietown.org/}} blíže popsán v \cite{Duckietown}. Ten začal jako předmět na MIT v roce 2016 a rozšířil se po celém světě s iniciativou zpřístupnit vzdělání v oblasti AI a robotiky všem v podobě zdokumentované platformy \textbf{ekosystému???}. Její součástí je právě i zmíněný simulátor, jehož prostředí je generováno na základě standardů popsaných v dokumentaci \ref{}
+    			
+    			Samotný simulátor je dostupný z \cite{gym_duckietown} s více způsoby instalace. Jelikož je napsaný v jazyce Python, měl by zaručit lepší kompatibility napříč platformami, avšak při testování na Windows 10 nebylo možné jednoduše zprovoznit. Až při použití Docker obrazu \textbf{image???} se ho podařilo spustit s menšími problémy.
+    			
+    			Po pull odpovídajícího docker image bylo nutné přidat do run příkazu flag 
+    			\command"-e DISPLAY=host.docker.internal:0.0" a nainstaovat aplikaci XLaunch\footnote{\href{http://www.straightrunning.com/XmingNotes/}{http://www.straightrunning.com/XmingNotes/}} pro přesměrování grafického prostředí z docker kontejneru do windows. Nutno podotknout, že při použití platformy linux by nemělo být potřeba podstupovat zmíněné kroky, což ale nebylo otestováno.
+    			
+    			Simulátor lze dále ovládat za pomoci python skriptů. Více informací k možnostem simulátoru lze získat ze zmíněného repository, z dokumentace viz. \href{https://docs-old.duckietown.org/daffy/}{https://docs-old.duckietown.org/daffy/} nebo z článku o soutěži AI-DO \cite{AI-DO}.
+	    			\begin{figure}[h]
+	    				\centering
+	    				\includegraphics[width=\textwidth]{Graphics/gym_duckietown_ukazka.png}
+	    				\caption{Ukázka prostředí simulátoru gym-duckietown.}
+	    			\end{figure}
+    			
+    		\subsection{AirSim}
+    			Pokročilejším simulátorem je dnes již archivovaný AirSim vyvíjený jako opensource společností Microsoft od roku 2017 do 2022 blíže popsán v článku \cite{airsim_paper}. Jeho zdrojový kód i kompilované binární soubory jsou stále k dispozici na stránkách \href{https://github.com/microsoft/AirSim}{https://github.com/microsoft/AirSim}.
+    			
+    				\begin{figure}[h]
+	    				\centering
+	    				\includegraphics[width=\textwidth]{Graphics/AirSim_ukazka.png}
+	    				\caption{Ukázka prostředí simulátoru AirSim včetně možných pohledů senzorů.}
+	    				\label{pic:AirSim_ukazka}
+	    			\end{figure}
+    			
+    			Narozdíl od předchozího je postaven na Unreal Engine (C++), ale nabízí i experimentální Unity (C\#) vydání, což umožňuje větší prostor ve výkonu díky rychlejším programovacím jazykům. Nabídne tak pokročilejší prostředí s vyšším detailem, ovládání počasí a v úvodu zmíněné různé pohledy viz. Obrázek \ref{pic:AirSim_ukazka} a senzory.
+    			
+    			Ovládání vozidla je provozováno přes Python nebo C++ API popsané v dokumentaci \href{https://microsoft.github.io/AirSim/}{https://microsoft.github.io/AirSim/} a rovněž je možné ovládat více agentů ve stejném světě.
+	    		
+	    	\subsection{Carla}
+	    		Další pokročilý open-source simulátor Carla na bázi Unreal Engine (C++) nabízí podobně jako AirSim realistickou simulaci a ovládání pomocí Python a C++ API. Navíc je zde také možné mít větší kontrolu nad množstvím generovaných NPC aut a osob. Nabízí také vlastní autopilot, který je možné kdykoliv zapnout a případně porovnávat s vlastním řešením.
+	    		
+		    		\begin{figure}[h]
+		    			\centering
+		    			\includegraphics[width=\textwidth]{Graphics/Carla_ukazka.png}
+		    			\caption{Ukázka prostředí simulátoru Carla včetně možných pohledů senzorů.}
+		    			\label{pic:Carla_ukazka}
+		    		\end{figure}
+	    		
+	    		Při vytvoření nového agenta se otevře nové okno s jeho vizualizací viz. Obrázek \ref{pic:Carla_ukazka} a je tak možné ovládat manuálně jednotlivé agenty a vidět jejich separátní pohledy. S těmito možnostmi však přichází daleko vyšší požadavky na HW.
+	    		
+	    		Narozdíl od AirSim poskytuje realističtější fyziku a samotná NPC reagují na agenta např, že zastaví a při srážce se chovají jak by se očekávalo ve skutečnosti. Prostředí je vymodelováno od nuly a jeho komunikace jsou navrženy podle standardu OpenDRIVE\textsuperscript{\textregistered} verze 1.4 dostupného z \href{https://www.asam.net/standards/detail/opendrive/}{https://www.asam.net/standards/detail/opendrive/}.
+	    		
+	    	\subsection{Shrnutí}
+	    		Ačkoliv se gym-duckietown nejeví jako pokročilý simulátor, je postaven na základech existující platformy duckietown se spoustou návodů a soutěží, ze kterých se lze mnohé naučit. Samotnou mapu lze také individuálně navrhnout.
+	    		
+	    		AirSim nabízí pokročilejší grafiku, již připravené další pohledy a senzory jako je LIDAR, infračervená kamera nebo senzor vzdálenosti. Díky tomu je však náročnější na HW, zejména pak GPU. Bohužel však při kolizích vozidel se stává, že NPC nezastaví a odmrští agenta nereálnou silou nebo ho tlačí před sebou, dokud ho nezastaví např. červený semafor.
+	    		
+	    		Carla se dle nalezených rozdílů podle dokumentací od AirSimu příliš neliší. Zásadní rozdíl je však v konfigurovatelnosti prostředí a naprogramované fyzice NPC, kde poskytne vyšší kvalitu, ale za cenu výpočetní náročnosti.
+	    		
+	    		Mimo zmíněné simulátory existuje spoustu dalších a pro specifické úlohy lze použít i vyvinuté hry, které neposkytují sice takovou kontrolu nebo zpětnou vazbu, ale například pro RL mohou být dobrou alternativou.
+	    		
+	    		Při testování simulátorů vyplynulo, že možností je hodně avšak při daných podmínkách v úvodu kapitoly se jeví jako vhodnější platforma Linux pro její větší kompatibilitu. Všechny zmíněné simulátory a většina dalších nabízí k ovládání Python API, ačkoliv samotné simulátory jsou často naprogramovány v jiném jazyce. Tento fakt ukazuje nejen na popularitu jazyka v této oblasti, ale také na přístupnost simulátoru pro větší skupinu lidí bez nutnosti znalosti komplikovanějších jazyků.
+	    		
     	\section{Datasety}
+    		Samotná existence simulátorů velmi rozšiřuje možnosti pro tvorbu tzv. syntetických datasetů, které je možné generovat již s požadovanými podmínkami a konkrétními anotacemi. V následujícím výběru datasetů však jsou jen ty, které byly vytvořeny v reálném prostředí a ručně anotovány.
     		\subsection{duckietown}
+    			Pouze oficiální object detection dataset v dokumentaci k AI-DO 
+    			
+    			\href{https://docs-old.duckietown.org/daffy/AIDO/out/object_detection_dataset.html}{https://docs-old.duckietown.org/daffy/AIDO/out/object\_detection\_dataset.html}. Výhodou může být, že zde není uvedena žádná licence.
+    		\subsection{KITTI}
+    			Velmi dobrý zdroj datasetů pro autonomní řízení, který nabídne i samotné výstupy ze senzorů hloubky, nebo stereovizi včetně potřebných parametrů. To vše velmi dobře anotováno a přímo na jejich stránkách \href{https://www.cvlibs.net/datasets/kitti/}{https://www.cvlibs.net/datasets/kitti/} lze porovnat výsledky a přesnost s jinými metodami. Nevýhodou je, že dle licencí lze použít datasety pouza na výzkum a vývoj mimo komerční sféru.
+    		\subsection{Valeo Woodscape}
+    			Volně dostupný dataset vytvořený firmou Valeo pro poskytnutí dat komunitě pro vývoj řešení nad vstupním obrazem v podobě tzv. rybího oka. Obsahuje na 10k obrázků a 40 anotovaných tříd. Detaily sběru dat jsou popsány v článku \cite{woodscape} a ke stažení z \href{https://github.com/valeoai/WoodScape}{https://github.com/valeoai/WoodScape} nebo \href{https://woodscape.valeo.com/woodscape/}{https://woodscape.valeo.com/woodscape/}. Bohužel opět pouze pro výzkum a vývoj bez komerčního využití.
+    		\subsection{A2D2}
+    			Dataset vytvořený firmou Audi. k dispozici zde \href{https://www.a2d2.audi/a2d2/en.html}{https://www.a2d2.audi/a2d2/en.html} blíže popsáno v článku \cite{a2d2}
+    		\subsection{Appoloscape}
+    			\href{https://apolloscape.auto/}{https://apolloscape.auto/}
+    		\subsection{Argoverse}
+    			\href{https://www.argoverse.org/}{https://www.argoverse.org/}
+   			\subsection{Cityscapes}
+   				\href{https://www.cityscapes-dataset.com/}{https://www.cityscapes-dataset.com/}
+  			\subsection{comma2k19}
+  				\href{https://github.com/commaai/comma2k19}{https://github.com/commaai/comma2k19}
+  			\subsection{BDD100K}
+  				Paper \cite{bdd100k} odkazuje na dataset zde \href{https://bdd-data.berkeley.edu/}{https://bdd-data.berkeley.edu/}
+  			\subsection{PixSet Dataset}
+  				Vytvořeno firmou LeddarTech. ke stažení zde \href{https://leddartech.com/solutions/leddar-pixset-dataset/}{https://leddartech.com/solutions/leddar-pixset-dataset/}
+  			\subsection{Nuscenes}
+  				\href{https://www.nuscenes.org/}{https://www.nuscenes.org/}
+  			\subsection{Oxford RobotCar Dataset}
+  				\href{https://robotcar-dataset.robots.ox.ac.uk/}{https://robotcar-dataset.robots.ox.ac.uk/}
+  			\subsection{PandaSet}
+  				\href{https://pandaset.org/}{https://pandaset.org/}
+  			\subsection{Udacity Car Dataset}
+  				\href{https://public.roboflow.com/object-detection/self-driving-car}{https://public.roboflow.com/object-detection/self-driving-car}
+  			\subsection{Waymo Open Dataset}
+  				\href{https://waymo.com/open/}{https://waymo.com/open/} Potřebuje přihlášení.
+  			\subsection{Shrnutí}
+  				Jak je vidět výše, existuje spoustu anotovaných datasetů, z nihž některé nabízí i data ze senzorů nebo možnost porovnání výsledků. Naopak Většina těchto kvalitních datasetů není možné použít pro komerční vývoj bez zakoupení licence většinou zpravidla danou komunikací s vlastníkem. Existuje spoustu dalších zdrojů nebo portálů jako je například \href{https://www.kaggle.com/}{https://www.kaggle.com/} nebo \href{https://public.roboflow.com/}{https://public.roboflow.com/}. U nich je však potřeba si dávat pozor na kvalitu a správnost anotací i samotného obsahu narozdíl od datasetů vytvořených tak, aby nad nimi probíhala soutěž nebo vývoj na univerzitě nebo v automobilce, u kterých lze předpokládat vyšší kvalitu.
 	% _____________________________________________________________________________
 	%
 	%
