@@ -410,9 +410,134 @@ url = {https://www.a2d2.audi}
 	url={https://www.sae.org/standards/content/j3016_202104}
 }
 
+@misc{duckietown_web,
+	title={Duckietown project web},
+	url={https://www.duckietown.org/},
+	urldate={2023-07-26}
+}
+
 @misc{duckietown_documentation,
 	title={The Duckietown library},
-	year={2023},
 	urldate = {2023-07-26},
 	url={https://docs-old.duckietown.org/daffy/}
 }
+
+@misc{Kaggle,
+	title={Kaggle},
+	url={https://www.kaggle.com/},
+	urldate={2023-07-26}
+}
+
+@misc{Roboflow,
+	title={Roboflow},
+	url={https://public.roboflow.com/},
+	urldate={2023-07-26}
+}
+
+@misc{Apollo,
+	title={Apollo projekt},
+	url={https://www.apollo.auto/},
+	urldate={2023-07-26}
+}
+
+
+% datasety
+@misc{dataset_duckietown,
+	url={https://docs-old.duckietown.org/daffy/AIDO/out/object_detection_dataset.html},
+	urldate={2023-07-26}
+}
+
+@INPROCEEDINGS{dataset_KITTI_road,
+	author={Fritsch, Jannik and Kühnl, Tobias and Geiger, Andreas},
+	booktitle={16th International IEEE Conference on Intelligent Transportation Systems (ITSC 2013)}, 
+	title={A new performance measure and evaluation benchmark for road detection algorithms}, 
+	year={2013},
+	volume={},
+	number={},
+	pages={1693-1700},
+	abstract={Detecting the road area and ego-lane ahead of a vehicle is central to modern driver assistance systems. While lane-detection on well-marked roads is already available in modern vehicles, finding the boundaries of unmarked or weakly marked roads and lanes as they appear in inner-city and rural environments remains an unsolved problem due to the high variability in scene layout and illumination conditions, amongst others. While recent years have witnessed great interest in this subject, to date no commonly agreed upon benchmark exists, rendering a fair comparison amongst methods difficult. In this paper, we introduce a novel open-access dataset and benchmark for road area and ego-lane detection. Our dataset comprises 600 annotated training and test images of high variability from the KITTI autonomous driving project, capturing a broad spectrum of urban road scenes. For evaluation, we propose to use the 2D Bird's Eye View (BEV) space as vehicle control usually happens in this 2D world, requiring detection results to be represented in this very same space. Furthermore, we propose a novel, behavior-based metric which judges the utility of the extracted ego-lane area for driver assistance applications by fitting a driving corridor to the road detection results in the BEV. We believe this to be important for a meaningful evaluation as pixel-level performance is of limited value for vehicle control. State-of-the-art road detection algorithms are used to demonstrate results using classical pixel-level metrics in perspective and BEV space as well as the novel behavior-based performance measure. All data and annotations are made publicly available on the KITTI online evaluation website in order to serve as a common benchmark for road terrain detection algorithms.},
+	keywords={},
+	doi={10.1109/ITSC.2013.6728473},
+	ISSN={2153-0017},
+	month={10},
+}
+
+https://www.cvlibs.net/datasets/kitti/
+
+@misc{dataset_KITTI_web,
+	title={KITTI datasety},
+	url={https://www.cvlibs.net/datasets/kitti/},
+	urldate={2023-07-26}
+}
+
+@misc{dataset_woodscape,
+	title={Valeo Woodscape dataset},
+	url={https://woodscape.valeo.com/woodscape/},
+	urldate={2023-07-26}
+}
+
+@misc{dataset_A2D2,
+	title={Audi A2D2 dataset},
+	url={https://www.a2d2.audi/a2d2/en.html},
+	urldate={2023-07-26}
+}
+
+@ARTICLE{dataset_ApolloScape_paper,
+	author={Huang, Xinyu and Wang, Peng and Cheng, Xinjing and Zhou, Dingfu and Geng, Qichuan and Yang, Ruigang},
+	journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+	title={The ApolloScape Open Dataset for Autonomous Driving and Its Application}, 
+	year={2020},
+	volume={42},
+	number={10},
+	pages={2702-2719},
+	abstract={Autonomous driving has attracted tremendous attention especially in the past few years. The key techniques for a self-driving car include solving tasks like 3D map construction, self-localization, parsing the driving road and understanding objects, which enable vehicles to reason and act. However, large scale data set for training and system evaluation is still a bottleneck for developing robust perception models. In this paper, we present the ApolloScape dataset [1] and its applications for autonomous driving. Compared with existing public datasets from real scenes, e.g., KITTI [2] or Cityscapes [3] , ApolloScape contains much large and richer labelling including holistic semantic dense point cloud for each site, stereo, per-pixel semantic labelling, lanemark labelling, instance segmentation, 3D car instance, high accurate location for every frame in various driving videos from multiple sites, cities and daytimes. For each task, it contains at lease 15x larger amount of images than SOTA datasets. To label such a complete dataset, we develop various tools and algorithms specified for each task to accelerate the labelling process, such as joint 3D-2D segment labeling, active labelling in videos etc. Depend on ApolloScape, we are able to develop algorithms jointly consider the learning and inference of multiple tasks. In this paper, we provide a sensor fusion scheme integrating camera videos, consumer-grade motion sensors (GPS/IMU), and a 3D semantic map in order to achieve robust self-localization and semantic segmentation for autonomous driving. We show that practically, sensor fusion and joint learning of multiple tasks are beneficial to achieve a more robust and accurate system. We expect our dataset and proposed relevant algorithms can support and motivate researchers for further development of multi-sensor fusion and multi-task learning in the field of computer vision.},
+	keywords={},
+	doi={10.1109/TPAMI.2019.2926463},
+	ISSN={1939-3539},
+month={Oct},
+}
+
+@misc{dataset_ApolloScape,
+	title={ApolloScape dataset},
+	url={https://apolloscape.auto/index.html},
+	urldate={2023-07-26}
+}
+
+@INPROCEEDINGS{dataset_Argoverse1_paper,
+	author={Chang, Ming-Fang and Lambert, John and Sangkloy, Patsorn and Singh, Jagjeet and Bak, Slawomir and Hartnett, Andrew and Wang, De and Carr, Peter and Lucey, Simon and Ramanan, Deva and Hays, James},
+	booktitle={2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+	title={Argoverse: 3D Tracking and Forecasting With Rich Maps}, 
+	year={2019},
+	volume={},
+	number={},
+	pages={8740-8749},
+	abstract={We present Argoverse, a dataset designed to support autonomous vehicle perception tasks including 3D tracking and motion forecasting. Argoverse includes sensor data collected by a fleet of autonomous vehicles in Pittsburgh and Miami as well as 3D tracking annotations, 300k extracted interesting vehicle trajectories, and rich semantic maps. The sensor data consists of 360 degree images from 7 cameras with overlapping fields of view, forward-facing stereo imagery, 3D point clouds from long range LiDAR, and 6-DOF pose. Our 290km of mapped lanes contain rich geometric and semantic metadata which are not currently available in any public dataset. All data is released under a Creative Commons license at Argoverse.org. In baseline experiments, we use map information such as lane direction, driveable area, and ground height to improve the accuracy of 3D object tracking. We use 3D object tracking to mine for more than 300k interesting vehicle trajectories to create a trajectory forecasting benchmark. Motion forecasting experiments ranging in complexity from classical methods (k-NN) to LSTMs demonstrate that using detailed vector maps with lane-level information substantially reduces prediction error. Our tracking and forecasting experiments represent only a superficial exploration of the potential of rich maps in robotic perception. We hope that Argoverse will enable the research community to explore these problems in greater depth.},
+	keywords={},
+	doi={10.1109/CVPR.2019.00895},
+	ISSN={2575-7075},
+	month={6},
+}
+
+@inproceedings{dataset_Argoverse2_paper,
+ author = {Wilson, Benjamin and Qi, William and Agarwal, Tanmay and Lambert, John and Singh, Jagjeet and Khandelwal, Siddhesh and Pan, Bowen and Kumar, Ratnesh and Hartnett, Andrew and Kaesemodel Pontes, Jhony and Ramanan, Deva and Carr, Peter and Hays, James},
+ booktitle = {Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks},
+ editor = {J. Vanschoren and S. Yeung},
+ pages = {},
+ publisher = {Curran},
+ title = {Argoverse 2: Next Generation Datasets for Self-Driving Perception and Forecasting},
+ url = {https://datasets-benchmarks-proceedings.neurips.cc/paper_files/paper/2021/file/4734ba6f3de83d861c3176a6273cac6d-Paper-round2.pdf},
+ volume = {1},
+ year = {2021}
+}
+@misc{dataset_Argoverse,
+	title={Argoverse dataset},
+	url={https://www.argoverse.org/index.html},
+	urldate={2023-07-26}
+}
+
+
+%@misc{,
+%	title={},
+%	url={},
+%	urldate={2023-07-26}
+%}

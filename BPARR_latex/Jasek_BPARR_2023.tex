@@ -5,7 +5,7 @@
 %
 % _____________________________________________________________________________
 %
-\documentclass[czech, bc, kky, he, iso690alph]{fasthesis}
+\documentclass[czech, bc, kky, he, iso690numb]{fasthesis}
 \title{Analýza systémů pro udržení vozidla v jízdním pruhu}
 \author{Filip}{Jašek}{}{}
 \supervisor{Ing. Petr Neduchal, Ph.D.}
@@ -72,7 +72,7 @@
     %
     % _____________________________________________________________________________
     %
-	\chapter{Úvod 3 - FINAL}
+	\chapter{Úvod}
 		Autonomní řízení je zajímavou avšak náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Přes veškeré dostupné technologie, systémy naráží na překážky v podobě nehomogenních podmínek \cite{VIOLET} nebo nepředvídatelného chování ostatních účastníků provozu \cite{AV_crashes_involved_vulnerable, AV_vs_CV_crashes}. Ačkoliv jsou v moderních vozidlech nejrůznější asistenční systémy již téměř standardem, jen malá část z nich je vybavena systémem schopným autonomního řízení. Za zmínku stojí americká automobilka \href{https://www.tesla.com}{Tesla}\footnote{\href{https://www.tesla.com}{https://www.tesla.com}}, která jako jedna z mála nabízí za příplatek i možnost uživatelského přístupu k autonomnímu systému autopilot a využívat ho na veřejných komunikacích. Bohužel však stále není možné ho využívat bez pozornosti řidiče ani vyloučit možné kolize. Ty však nemusí být způsobeny samotných systémem, ale třeba i jiným vozidlem, cyklistou, nebo dokonce převzetím řízení člověkem.
 		
 		Nejen s technologickými problémy je nutno bojovat, aby se prosadilo větší rozšíření těchto vozidel. Všeobecná skepse vůči autonomii v mobilitě vyplývající z analýzy sociální sítě Reddit \cite{public_opinion_on_AV} nepřispívá k pozitivnímu pohledu na tuto technologii. Původcem nedůvěry nebo obav z ní je způsobeno zejména mylným povědomím a nedostatečnou informovaností o její bezpečnosti \cite{AV_vs_CV_crashes}.
@@ -394,7 +394,7 @@
     			Simulátor lze dále ovládat za pomoci python skriptů. Více informací k možnostem simulátoru lze získat ze zmíněného repository, z dokumentace viz. \href{https://docs-old.duckietown.org/daffy/}{https://docs-old.duckietown.org/daffy/} nebo z článku o soutěži AI-DO \cite{AI-DO}.
 	    			\begin{figure}[h]
 	    				\centering
-	    				\includegraphics[width=\textwidth]{Graphics/gym_duckietown_ukazka.png}
+	    				\includegraphics[width=.6\textwidth]{Graphics/gym_duckietown_ukazka.png}
 	    				\caption{Ukázka prostředí simulátoru gym-duckietown.}
 	    			\end{figure}
     			
@@ -403,7 +403,7 @@
     			
     				\begin{figure}[h]
 	    				\centering
-	    				\includegraphics[width=\textwidth]{Graphics/AirSim_ukazka.png}
+	    				\includegraphics[width=.6\textwidth]{Graphics/AirSim_ukazka.png}
 	    				\caption{Ukázka prostředí simulátoru AirSim včetně možných pohledů senzorů.}
 	    				\label{pic:AirSim_ukazka}
 	    			\end{figure}
@@ -417,7 +417,7 @@
 	    		
 		    		\begin{figure}[h]
 		    			\centering
-		    			\includegraphics[width=\textwidth]{Graphics/Carla_ukazka.png}
+		    			\includegraphics[width=.6\textwidth]{Graphics/Carla_ukazka.png}
 		    			\caption{Ukázka prostředí simulátoru Carla včetně možných pohledů senzorů.}
 		    			\label{pic:Carla_ukazka}
 		    		\end{figure}
@@ -439,40 +439,41 @@
 	    		
     	\section{Datasety}
     		Samotná existence simulátorů velmi rozšiřuje možnosti pro tvorbu tzv. syntetických datasetů, které je možné generovat již s požadovanými podmínkami a konkrétními anotacemi. V následujícím výběru datasetů však jsou jen ty, které byly vytvořeny v reálném prostředí a ručně anotovány.
-    		\subsection{duckietown}
-    			Pouze oficiální object detection dataset v dokumentaci k AI-DO 
+    		
+    		\paragraph{Duckietown}
+    			V rámci dříve zmíněné platformy Duckietown \cite{Duckietown} lze získat oficiální object detection dataset v dokumentaci k AI-DO viz. \cite{dataset_duckietown} v rámci jejich kompletní dokumentace \cite{duckietown_documentation}. Výhodou může být, že zde není uvedena žádná licence. Obsahuje 1956 obrázků a 3 anotované kategorie objektů.
     			
-    			\href{https://docs-old.duckietown.org/daffy/AIDO/out/object_detection_dataset.html}{https://docs-old.duckietown.org/daffy/AIDO/out/object\_detection\_dataset.html}. Výhodou může být, že zde není uvedena žádná licence.
-    		\subsection{KITTI}
-    			Velmi dobrý zdroj datasetů pro autonomní řízení, který nabídne i samotné výstupy ze senzorů hloubky, nebo stereovizi včetně potřebných parametrů. To vše velmi dobře anotováno a přímo na jejich stránkách \href{https://www.cvlibs.net/datasets/kitti/}{https://www.cvlibs.net/datasets/kitti/} lze porovnat výsledky a přesnost s jinými metodami. Nevýhodou je, že dle licencí lze použít datasety pouza na výzkum a vývoj mimo komerční sféru.
-    		\subsection{Valeo Woodscape}
-    			Volně dostupný dataset vytvořený firmou Valeo pro poskytnutí dat komunitě pro vývoj řešení nad vstupním obrazem v podobě tzv. rybího oka. Obsahuje na 10k obrázků a 40 anotovaných tříd. Detaily sběru dat jsou popsány v článku \cite{woodscape} a ke stažení z \href{https://github.com/valeoai/WoodScape}{https://github.com/valeoai/WoodScape} nebo \href{https://woodscape.valeo.com/woodscape/}{https://woodscape.valeo.com/woodscape/}. Bohužel opět pouze pro výzkum a vývoj bez komerčního využití.
-    		\subsection{A2D2}
-    			Dataset vytvořený firmou Audi. k dispozici zde \href{https://www.a2d2.audi/a2d2/en.html}{https://www.a2d2.audi/a2d2/en.html} blíže popsáno v článku \cite{a2d2}
-    		\subsection{Appoloscape}
-    			\href{https://apolloscape.auto/}{https://apolloscape.auto/}
-    		\subsection{Argoverse}
-    			\href{https://www.argoverse.org/}{https://www.argoverse.org/}
-   			\subsection{Cityscapes}
+    		\paragraph{KITTI}
+    			Velmi dobrý zdroj datasetů pro autonomní řízení vzniklý jako projekt "Karlsruhe Institute of Technology" a "Toyota Technological Institute at Chicago", který nabídne i samotné výstupy ze senzorů hloubky, nebo stereovize včetně potřebných parametrů. To vše velmi dobře anotováno, popsáno ve článcích jako je \cite{dataset_KITTI_road} a přímo na jejich stránkách \cite{dataset_KITTI_web} lze porovnat výsledky a přesnost s jinými metodami.
+    			
+    		\paragraph{Valeo Woodscape}
+    			Volně dostupný dataset vytvořený firmou Valeo pro poskytnutí dat komunitě pro vývoj řešení nad vstupním obrazem v podobě tzv. rybího oka. Obsahuje na 10k obrázků a 40 anotovaných tříd. Detaily sběru dat jsou popsány v článku \cite{woodscape} a ke stažení z \cite{dataset_woodscape}.
+    		\paragraph{A2D2}
+    			Dataset vytvořený firmou Audi zveřejněný pro podporu startupů a výzkumů zabývající se autonomním řízením automobilu. K dispozici zde \cite{dataset_A2D2} blíže popsáno v článku \cite{a2d2}
+    		\paragraph{Appoloscape}
+    			Dataset popsaný v \cite{dataset_ApolloScape_paper}, vytvořený čínskou firmou "Baidu Research" v rámci projektu Apollo \cite{Apollo}. Na jejich webu \cite{dataset_ApolloScape} jsou dostupné ukázky jednotlivých typů včetně nástrojů a návodů pro manipulaci, ale plnou verzi datasetu lze získat jen po zaslání emailové žádosti.
+    		\paragraph{Argoverse}
+    			Dataset vzniklý ve spolupráci organizace "Argo AI" a studentů a fakult univerzit "Carnegie Mellon University" a "Georgia Institute of Technology"  obsahující dvě verze viz \cite{dataset_Argoverse1_paper, dataset_Argoverse2_paper}. Obě se ale zaměřují primárně na predikci pohybu objektů, obsahují velmi detailní data z LiDARU, obrazu a také mapy prostředí, kde byla data sbírána. Ke stažení je z webových stránek projektu \cite{dataset_Argoverse}.
+   			\paragraph{Cityscapes}
    				\href{https://www.cityscapes-dataset.com/}{https://www.cityscapes-dataset.com/}
-  			\subsection{comma2k19}
+  			\paragraph{comma2k19}
   				\href{https://github.com/commaai/comma2k19}{https://github.com/commaai/comma2k19}
-  			\subsection{BDD100K}
+  			\paragraph{BDD100K}
   				Paper \cite{bdd100k} odkazuje na dataset zde \href{https://bdd-data.berkeley.edu/}{https://bdd-data.berkeley.edu/}
-  			\subsection{PixSet Dataset}
+  			\paragraph{PixSet Dataset}
   				Vytvořeno firmou LeddarTech. ke stažení zde \href{https://leddartech.com/solutions/leddar-pixset-dataset/}{https://leddartech.com/solutions/leddar-pixset-dataset/}
-  			\subsection{Nuscenes}
+  			\paragraph{Nuscenes}
   				\href{https://www.nuscenes.org/}{https://www.nuscenes.org/}
-  			\subsection{Oxford RobotCar Dataset}
+  			\paragraph{Oxford RobotCar Dataset}
   				\href{https://robotcar-dataset.robots.ox.ac.uk/}{https://robotcar-dataset.robots.ox.ac.uk/}
-  			\subsection{PandaSet}
+  			\paragraph{PandaSet}
   				\href{https://pandaset.org/}{https://pandaset.org/}
-  			\subsection{Udacity Car Dataset}
+  			\paragraph{Udacity Car Dataset}
   				\href{https://public.roboflow.com/object-detection/self-driving-car}{https://public.roboflow.com/object-detection/self-driving-car}
-  			\subsection{Waymo Open Dataset}
+  			\paragraph{Waymo Open Dataset}
   				\href{https://waymo.com/open/}{https://waymo.com/open/} Potřebuje přihlášení.
   			\subsection{Shrnutí}
-  				Jak je vidět výše, existuje spoustu anotovaných datasetů, z nihž některé nabízí i data ze senzorů nebo možnost porovnání výsledků. Naopak Většina těchto kvalitních datasetů není možné použít pro komerční vývoj bez zakoupení licence většinou zpravidla danou komunikací s vlastníkem. Existuje spoustu dalších zdrojů nebo portálů jako je například \href{https://www.kaggle.com/}{https://www.kaggle.com/} nebo \href{https://public.roboflow.com/}{https://public.roboflow.com/}. U nich je však potřeba si dávat pozor na kvalitu a správnost anotací i samotného obsahu narozdíl od datasetů vytvořených tak, aby nad nimi probíhala soutěž nebo vývoj na univerzitě nebo v automobilce, u kterých lze předpokládat vyšší kvalitu.
+  				Jak je vidět výše, existuje spoustu anotovaných datasetů, z nihž některé nabízí i data ze senzorů nebo možnost porovnání výsledků. Naopak Většina těchto kvalitních datasetů není možné použít pro komerční vývoj bez zakoupení licence většinou zpravidla danou komunikací s vlastníkem. Existuje spoustu dalších zdrojů nebo portálů jako je například Kaggle \cite{Kaggle}, Roboflow \cite{Roboflow} a další. U nich je však potřeba si dávat pozor na kvalitu a správnost anotací i samotného obsahu narozdíl od datasetů vytvořených tak, aby nad nimi probíhala soutěž nebo vývoj na univerzitě nebo v automobilce, u kterých lze předpokládat vyšší kvalitu.
 	% _____________________________________________________________________________
 	%
 	%
