@@ -20,7 +20,7 @@
 %
 % _____________________________________________________________________________
 %
-\abstract{Cílem bakalářské práce je analyzovat systémy, které lze použít pro autonomní udržení vozidla v jízdním pruhu na základě vizuálního senzoru - kamery. Analýza se skládá z obecného seznámení s tématem, představení relevantních simulátorů a datasetů, jednotlivých přístupů a jejich slabin. Tři hlavní metody jsou teoreticky více rozebrány a dvě z nich jsou implementovány a otestovány v praktické části na simulačním příkladu diferenciálního dvoukolového robota. Jedna je založena na algoritmických metodách zpracování obrazu a druhá na modernějším přístupu segmentace obrazu pomocí neuronové sítě, konkrétně U-Net. V rámci praktické demonstrace dvou zmíněných metod bylo provedeno i jejich srovnání s manuálně vytvořeným vzorem. \textbf{Hlavním přínosem této práce je přiblížení principů autonomního řízení na zjednodušené úloze udržení vozidla v jízdním pruhu a seznámení s překážkami této oblasti.}}
+\abstract{Cílem bakalářské práce je analyzovat systémy, které lze použít pro autonomní udržení vozidla v jízdním pruhu na základě vizuálního senzoru - kamery. Analýza se skládá z obecného seznámení s tématem, představení relevantních simulátorů a datasetů, jednotlivých přístupů a jejich slabin. Tři hlavní metody jsou teoreticky více rozebrány a dvě z nich jsou implementovány a otestovány v praktické části na simulačním příkladu diferenciálního dvoukolového robota. Jedna je založena na algoritmických metodách zpracování obrazu a druhá na modernějším přístupu segmentace obrazu pomocí neuronové sítě, konkrétně U-Net. V rámci praktické demonstrace dvou zmíněných metod bylo provedeno i jejich srovnání s manuálně vytvořeným vzorem. Hlavním přínosem této práce je analýza přístupů k autonomního řízení na zjednodušené úloze udržení vozidla v jízdním pruhu a seznámení s překážkami této oblasti.}
 % *** English abstract ***
 {přepíši do angličtiny až bude schválena česká verze.}
 \keywords{autonommní, simulátor, dataset, robot, algoritmický, zpracování obrazu, neuronová síť, U-Net}
@@ -72,26 +72,22 @@
     %
     % _____________________________________________________________________________
     %
-	\chapter{Úvod}
-	    Autonomní řízení je zajímavou a náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Postupně vyvíjená řešení však naráží na překážky v podobě skepse, nedůvěry lidí, technologických nedostatků, neideálního prostředí a dalších aspektů popsaných v článku \cite{autopilot}. Mimo méně pokročilé projekty, které mohou dělat chybná rozhodnutí, existují řešení, které jsou ve vývoji mnohem dále pokouší se je implementovat do provozu (např. autopilot automobilky Tesla). Přes pokrokovost a množství dat od uživatelů těchto automobilů ale stále není možné vyloučit kolizi v reálném provozu. Ty však nemusí být způsobeny samotných systémem, ale třeba i lidským řidičem. Možností je zde v více, například a to kolize způsobená řidičem autonomního vozidla, který zasáhne do řízení, nestandardním chováním řidiče jiného vozidla, selháním autonomního systému nebo jinými okolními vlivy. Záznamy o těchto incidentech rozdělují lidi v názoru na tuto technologii a zvyšují tak tlak na její sofistikovanost.\\
- 	\chapter{Úvod 2}
-		Autonomní řízení je zajímavou a náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tak tím mimo jiné negativní dopady lidských chyb v dopravních nehodách a zvýšit tak bezpečnost v dopravě pro všechny účastníky provozu. Postupně vyvíjená řešení však naráží na překážky v podobě skepse, nedůvěry lidí, technologických nedostatků, neideálního prostředí a dalších aspektů popsaných v článku \cite{autopilot}. Mimo méně pokročilé projekty, které mohou dělat chybná rozhodnutí, existují řešení, které jsou ve vývoji mnohem dále pokouší se je implementovat do provozu (např. autopilot automobilky Tesla). Přes pokrokovost a množství dat od uživatelů těchto automobilů ale stále není možné vyloučit kolizi v reálném provozu. Ty však nemusí být způsobeny samotných systémem, ale třeba i lidským řidičem jiného vozidla nebo dokonce cyklisty. Již více publikací se věnuje bezpečnosti autonomních vozidel (dále AV). Kvůli proporčně menšímu množství AV vůči konvenčním vozidlům (dále KV) jsou záznamy nehod nevyvážené a tudíž může být náročné data správně interpretovat jelikož jak plyne . . Možností je zde v více, například a to kolize způsobená řidičem autonomního vozidla, který zasáhne do řízení, nestandardním chováním řidiče jiného vozidla, selháním autonomního systému nebo jinými okolními vlivy. Záznamy o těchto incidentech rozdělují lidi v názoru na tuto technologii a zvyšují tak tlak na její sofistikovanost.
 	\chapter{Úvod 3 - FINAL}
-		Autonomní řízení je velice zajímavou avšak náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Přes veškeré dostupné technologie, systémy naráží na překážky v podobě nehomogenních podmínek \cite{VIOLET} nebo nepředvídatelného chování ostatních účastníků provozu \cite{AV_crashes_involved_vulnerable, AV_vs_CV_crashes}. Ačkoliv jsou v moderních vozidlech nejrůznější asistenční systémy již téměř standardem, jen malá část z nich je vybavena systémem schopným autonomního řízení. Za zmínku stojí americká automobilka \href{https://www.tesla.com}{Tesla}\footnote{\href{https://www.tesla.com}{https://www.tesla.com}}, která jako jedna z mála nabízí za příplatek i možnost uživatelského přístupu k autonomnímu systému autopilot a využívat ho na veřejných komunikacích. Bohužel však stále není možné ho využívat bez pozornosti řidiče ani vyloučit možné kolize. Ty však nemusí být způsobeny samotných systémem, ale třeba i jiným vozidlem, cyklistou, nebo dokonce převzetím řízení člověkem.
+		Autonomní řízení je zajímavou avšak náročnou vědní disciplínou. Mnoho firem a institucí vyvíjí mimořádnou snahu automatizovat dopravu a eliminovat tím tak negativní dopady lidských chyb a nepředvídatelných reakcí. Přes veškeré dostupné technologie, systémy naráží na překážky v podobě nehomogenních podmínek \cite{VIOLET} nebo nepředvídatelného chování ostatních účastníků provozu \cite{AV_crashes_involved_vulnerable, AV_vs_CV_crashes}. Ačkoliv jsou v moderních vozidlech nejrůznější asistenční systémy již téměř standardem, jen malá část z nich je vybavena systémem schopným autonomního řízení. Za zmínku stojí americká automobilka \href{https://www.tesla.com}{Tesla}\footnote{\href{https://www.tesla.com}{https://www.tesla.com}}, která jako jedna z mála nabízí za příplatek i možnost uživatelského přístupu k autonomnímu systému autopilot a využívat ho na veřejných komunikacích. Bohužel však stále není možné ho využívat bez pozornosti řidiče ani vyloučit možné kolize. Ty však nemusí být způsobeny samotných systémem, ale třeba i jiným vozidlem, cyklistou, nebo dokonce převzetím řízení člověkem.
 		
 		Nejen s technologickými problémy je nutno bojovat, aby se prosadilo větší rozšíření těchto vozidel. Všeobecná skepse vůči autonomii v mobilitě vyplývající z analýzy sociální sítě Reddit \cite{public_opinion_on_AV} nepřispívá k pozitivnímu pohledu na tuto technologii. Původcem nedůvěry nebo obav z ní je způsobeno zejména mylným povědomím a nedostatečnou informovaností o její bezpečnosti \cite{AV_vs_CV_crashes}.
 		
-		Typickou predikcí budoucnosti mobility jsou právě autonomní prostředky, které budou schopny dopravovat lidi, kteří se mezitím budou zabývat například prací, spánku nebo jiným činnostem bez stresu z denního dojíždění. Dnes sice tato budoucnost stále není skutečností, ale technologickými pokroky se dostáváme stále blíže. Výrazný posun zajistilo nejen nedávné rozšíření neuronových sítí ale také matematické metody a algoritmy, které se stále používají a často i v kombinaci s neuronovými sítěmi.
+		Typickou predikcí budoucnosti mobility jsou právě autonomní prostředky, které budou schopny dopravovat lidi, kteří se mezitím budou věnovat například práci, odpočinku nebo jiným činnostem bez stresu z denního dojíždění. Dnes sice tato budoucnost stále není skutečností, ale technologickými pokroky se dostáváme stále blíže. Výrazný posun zajistilo nejen nedávné rozšíření neuronových sítí ale také matematické metody a algoritmy, které se stále používají a často i v kombinaci s neuronovými sítěmi.
 		
-		V práci bude prvně popsána samotná autonomie a diskutována její bezpečnost. V další kapitole se bude věnovat teoretickému principu jednotlivých přístupů v úloze detekce jízdního pruhu a poté aplikaci dvou z prezentovaných principů. V neposlední řadě budou představeny relevantní simulátory a datové zdroje. Na závěr budou porovnány obě prakticky předvedené řešení na vzorovém datasetu.
+		V práci bude nejprve popsána samotná autonomie a diskutována její bezpečnost. V další kapitole se bude věnovat teoretickému principu jednotlivých přístupů v úloze detekce jízdního pruhu a poté aplikaci dvou z prezentovaných principů. V neposlední řadě budou představeny relevantní simulátory a datasety. Na závěr budou porovnány obě prakticky předvedené řešení na vzorovém datasetu.
     
     \section{Stupně autonomie}
-       	Protože autonomní systémy nejsou všechny na stejné úrovni/\textbf{stejně sofistikované???}, byla již v roce 2014 stanovena definice 6ti stupňů autonomie organizací SAE\footnote{Society of Automobile Engineers} často odkazovaná jako SAE Levels of Driving Automation\texttrademark od úrovně 0 (bez automatizace) do  úrovně 5 (plně autonomní). Od té doby došlo k několika revizím. Poslední proběhla v roce 2021 a její plné znění lze získat na oficiálních stránkách společnosti \cite{SAE_autonomy_levels}. Oficiální 41 stránkový dokument obsahuje detailní definice rolí řidiče a systému pro jednotlivé stupně. K obecnému porozumění tohoto rozdělení postačí zjednodušený graf na Obrázku \ref{pic:levels_of_autonomy}.
+       	Protože pro autonomní systémy existuje celá řada definic, které popisují jejich různě sofistikované varianty, byla již v roce 2014 stanovena standardní definice 6ti stupňů autonomie organizací SAE\footnote{Society of Automobile Engineers} často odkazovaná jako SAE Levels of Driving Automation\texttrademark od úrovně 0 (bez automatizace) do  úrovně 5 (plně autonomní). Od té doby došlo k několika revizím. Poslední proběhla v roce 2021 a její plné znění lze získat na oficiálních stránkách společnosti \cite{SAE_autonomy_levels}. Oficiální 41 stránkový dokument obsahuje detailní definice rolí řidiče a systému pro jednotlivé stupně. K obecnému porozumění tohoto rozdělení postačí zjednodušený graf na Obrázku \ref{pic:levels_of_autonomy}.
        	
        		\begin{figure}[h]
        			\centering
        			\includegraphics[width=.95\textwidth]{./Graphics/sae_levels_of_autonomy}
-       			\caption{Graf zobrazující úrovně automatizace od 0 (bez automatizace) do 5 (plně autonomní) převzat ze stránek společnosti \href{https://www.sae.org/standards/content/j3016_202104}{SAE}}
+       			\caption{Graf zobrazující úrovně automatizace od 0 (bez automatizace) do 5 (plně autonomní) převzat ze stránek společnosti SAE viz. \cite{SAE_autonomy_levels_web}.}
        			\label{pic:levels_of_autonomy}
        		\end{figure}
        	
@@ -110,7 +106,7 @@
 	% _____________________________________________________________________________
 	% 
     \chapter{Teoretická část - rešerše přístupů}\label{chap:01_asisten_jizdy_v_pruhu}
-	    V následujícím textu bude nejdříve podrobně rozebrán problém a popsány nejpoužívanější přístupy. Jedná se o řešení algoritmické, řešení založené na zpětnovazebním učení\footnote{v literatuře známé jako reinforcement learning} a nakonec řešení pomocí hlubokého učení\footnote{deep learning} na bázi neuronových sítí.
+	    V následujícím textu bude nejdříve podrobně rozebrán problém asistenta pro udržení vozidla v pruhu a popsány nejpoužívanější přístupy. Jedná se o řešení algoritmické, řešení založené na zpětnovazebním učení\footnote{v literatuře známé jako reinforcement learning} a nakonec řešení pomocí hlubokého učení\footnote{deep learning} na bázi neuronových sítí.
 	    
         I přes to, že se zdá jízda v pruhu jako problém s jednoduchým řešením, není to tak úplně pravda. Pro účely představení jednotlivých technologií bude problém zjednodušen předpokladem ideálních podmínek a zanedbáním variability okolního prostředí.
         
@@ -126,7 +122,7 @@
             Algoritmický přístup spočívá ve zpracování jednotlivých kamerových snímků za pomocí zavedených algoritmů do formy vhodné pro regulátor, který vytváří akční zásahy pro ovládání vozidla.\\
             Obvyklý postup implementace popsaný v \cite{VIOLET} se skládá z kroků popsaných v samostatných kapitolách \ref{chap:01_stanoveni_modelu_silnice} až \ref{chap:01_postprocessing}.\\
             \subsection{Stanovení modelu silnice}\label{chap:01_stanoveni_modelu_silnice}
-                Pro eliminaci chyb a šumu v obrazu je vhodné předem určit model silnice, po které se bude vozidlo pohybovat. Vhodným modelem je pro většinu moderních silnic Klotoid\footnote{křivka nazývaná také jako Eulerova} používaný při stavbě rychlostních cest a dálnic, popsán rovnicí \ref{eqn:clothoid equation}.
+                Pro eliminaci chyb a šumu v obrazu je vhodné předem určit model silnice, po které se bude vozidlo pohybovat. Vhodným modelem je pro většinu moderních silnic klotoid\footnote{křivka nazývaná také jako Eulerova} používaný při stavbě rychlostních cest a dálnic, popsán rovnicí \ref{eqn:clothoid equation}.
                 
                 Avšak při optimalizaci detekce pro dálnici lze uvažovat, že na zpracovávaném úseku budou hranice cesty tvořit rovnoběžné přímky. Stejný model však nebude dobře aproximovat trasy s prudšími zatáčkami a bude potřeba použít jiný model na bázi křivek (spline). Při výběru je nutné zohlednit i maximální rychlost, podle které je nutné přizpůsobit nejen viditelnost, ale právě i model. Pokud se totiž vozidlo bude pohybovat velmi malou rychlostí, lze použít jednodušší lineární model, protože na krátkém úseku lze potřebnou část cesty aproximovat opět přímkou i když se jedná o zatáčku.
                 
@@ -196,7 +192,7 @@
                         y & = & \frac{x^{3}}{6(A)^{2}}
                         \label{eqn:dukaz_aproximace_clothoidu_polynomem_3st}
                     \end{eqnarray}
-                která říká, že Clothoid křivku lze aproximovat polynomem třetího stupně
+                která říká, že klotoidu lze aproximovat polynomem třetího stupně
                     \begin{equation}
                         y = k x^{3},
                     \end{equation}
@@ -208,7 +204,7 @@
                 %https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.fit.html#numpy.polynomial.polynomial.Polynomial.fit
                 Vzhledem k různorodému dopravnímu značení nejen v jednotlivých státech, ale i jeho stavu v oblastech samotných států je obtížné navrhnout algoritmus spolehlivě detekující potřebné hranice cesty. Kromě samotného prostředí mohou mít na kvalitu značení vliv i parametry jako jsou stíny, déšť nebo samotná kvalita či opotřebení viz. Obrázek \ref{pic:line_quality}. To můžou být důvody proč například jednoduché metody na bázi hranové detekce selžou. 
                 
-                	\begin{figure}[h]
+                	\begin{figure}[ht]
                 		\centering
                 		\includegraphics[width=.75\textwidth]{Graphics/lane_quality.png}
                 		\caption{Fotografie různých variant stavu značení nebo podmínek. Cesta (a) zobrazující optimální plnou a přerušovanou čáru, (b) nejednolitý povrch vozovky, (c) , (d), (e), (f)...\textbf{Mám to tady nechat nebo jen odkázat na článek, kde jsem to našel?}}
@@ -261,7 +257,7 @@
                 
                 \begin{figure}[h]
                 	\centering
-                	\includegraphics[width=.9\textwidth]{Graphics/loading.jpg}
+                	\includegraphics[width=.7\textwidth]{Graphics/loading.jpg}
                 	\caption{Blokové schéma navrženého kaskádního regulátoru s dvěma vstupy.}
                 	\label{pic:regulator_schema}
                 \end{figure}
@@ -311,7 +307,7 @@
             		
             		\begin{figure}[h]
             			\centering
-            			\includegraphics[width=.5\textwidth]{Graphics/loading.jpg}
+            			\includegraphics[width=.5\textwidth]{Graphics/A2C_schema.pdf}
             			\caption{Schéma RL metody actor-critic.}
             			\label{pic:actor_critic}
             		\end{figure}
@@ -326,24 +322,47 @@
         \section{Řešení pomocí hlubokého učení}
         	S nedávným nárůstem výpočetního výkonu a optimalizace specifického hardwaru se stalo hluboké učení dostupnější. Vznikem frameworků jako je PyTorch, Keras a TensorFlow pro práci se strukturami neuronových sítích v populárních programovacích jazycích se zpřístupnila a zjednodušila práce s nimi. Nebylo již nutné programovat vlastní funkce a metody a tak se více lidí mohlo zapojit do vývoje složitějších architektur a soustředit se na stavbu samotných neuronových sítí. Dnes již existuje spoustu návodů i mimo výzkumné práce, ať už specifických pro zmíněné frameworky a nebo těch sdílených komunitou.
             
-            \textbf{Nějaký úvod do principu neuronových sítí a hlubokého učení?}
+	            \begin{figure}[h]
+	            	\centering
+	            	\includegraphics[width=.4\textwidth]{Graphics/perceptron.png}
+	            	\caption{Základní jednotka neuronové sítě - perceptron. Zdroj \cite{neural_networks_background_02}}
+	            	\label{pic:perceptron}
+	            \end{figure}
+	            
+            Samotné neuronové jsou matematické modely inspirované biologickým nervovým systémem, kde je nejmenší stavební jednotkou jeden neuron nazývaný také jako perceptron viz Obrázek \ref{pic:perceptron}. Ten je matematicky reprezentován jako funkce 
+            \[y=f(\mathbf{W}\cdot\mathbf{X} + b),\]
+            kde \(\mathbf{W}\) je vektor vah, \(\mathbf{X}\) vektor vstupů, \(b\) je \textbf{hodnota zkreslení???} a \(f\) aktivační funkce transformující vstupní hodnotu součtu na danou výstupní funkci. Z paralelně zapojených perceptronů se skládají jednotlivé vrstvy, které se řetězí dále do podoby požadované neuronové sítě např. viz. Obrázek \ref{pic:basic_nn}. Učení pak probíhá nastavování zmíněných vnitřních parametrů za pomoci gradientu vypočteném v dimenzi rovné počtu vstupů. Podrobnější informace o fungování lze získat z \cite{neural_networks_background_01,neural_networks_background_02}.
+            
+	            \begin{figure}[h]
+	            	\centering
+	            	\includegraphics[width=.7\textwidth]{Graphics/simple_nn.png}
+	            	\caption{Jednoduchá ukázka architektury vytvořená spojováním perceptronů. Zdroj \cite{neural_networks_background_02}}
+	            	\label{pic:basic_nn}
+	            \end{figure}
             
            	Dnes již existuje spoustu architektur optimalizovaných pro řešení specifických problémů a tudíž není nutné samostatně vyvíjet vlastní a postačí upravit ty stávající. Pro oblast detekce pruhů z obrazu je vhodná kategorie tzv. Konvolučních neuronových sítí. Ty lze dále rozdělit na problém klasifikace, detekce a segmentace popsaných v násleujících sekcích.
            	
            	\subsection{Klasifikace obrazu} \label{subsec:klasifikace_obrazu}
-           		Jedná se o problematiku s nejjednodušší architekturou, která jako vstup bere matici reprezentující obrázek a jako výstup dává zpravidla pravděpodobnost předem definovaných kategorií. Jednou z nich je LeNet-5 \cite{LeNet-5} s pouhými 60000 parametry představená již v roce 1998. Její struktura se stala de facto standardní šablonou pro jiné mnohem větší sítě. I Když se jedná o nejjednodušší typy sítí, spadají sem také velké sítě jako AlexNet \cite{ImageNet} s 60M parametry nebo VGG-16 \cite{VGG-16} se 138M parametrů, které mají více vrstev a pracují s větším rozlišením vstupu, což může být v některých případech výhodné, ale značně náročné na HW zdroje. Od toho se odlišují například sítě Inception-v3 \cite{Inception-v3} na bázi technologie Network in network \cite{Network_in_network} nebo ResNet-50 \cite{ResNet-50} s použitím tzv. "skip connections" kombinující výstup předchozí vrstvy a výstupu současné. Jak je zřejmé, zvyšováním počtu parametrů došlo k saturaci přesnosti sítě a tak musely být aplikovány jiné metody pro její zlepšení.
+           		Jedná se o problematiku s nejjednodušší architekturou, která jako vstup bere matici reprezentující obrázek a jako výstup dává zpravidla pravděpodobnost předem definovaných kategorií. Jednou z nich je LeNet-5 \cite{LeNet-5} s pouhými 60000 parametry představená již v roce 1998. Její struktura se stala de facto standardní šablonou pro jiné mnohem větší sítě. I Když se jedná o nejjednodušší typy sítí, spadají sem také velké sítě jako AlexNet \cite{ImageNet} s 60M parametry nebo VGG-16 \cite{VGG-16} se 138M parametrů, které mají více vrstev a pracují s větším rozlišením vstupu, což může být v některých případech výhodné, ale značně náročné na HW zdroje. Od toho se odlišují například sítě Inception-v3 \cite{Inception-v3} na bázi technologie Network in network \cite{Network_in_network} nebo ResNet-50 \cite{ResNet-50} s použitím tzv. "skip connections"  kombinující výstup předchozí vrstvy a výstupu současné. Jak je zřejmé, zvyšováním počtu parametrů došlo k saturaci přesnosti sítě a tak musely být aplikovány jiné metody pro její zlepšení.
            	
            	\subsection{Detekce objektů}\label{subsec:detekce_objektu}
-           		Detekční sítě jsou již komplikovanější struktury a od klasifikace se liší tím, že neklasifikují vstupní obraz jako celek ale hledají v něm požadované objekty. Výstupem tedy bude region vymezený v obraze obdélníkem, ohraničující nalezený objekt a třída. V případě více objektů bude výstupem ideálně odpovídající množství zmíněného výstupu.
+           		Detekční sítě jsou komplikovanější struktury a od klasifikace se liší tím, že neklasifikují vstupní obraz jako celek ale hledají v něm požadované objekty. Výstupem tedy bude region vymezený v obraze obdélníkem, ohraničující nalezený objekt a třída. V případě více objektů bude výstupem ideálně odpovídající množství zmíněného výstupu.
            		
-           		Detekci lze rozdělit na dvoustupňovou a jednostupňovou. Dvoustupňová se skládá z prvotní detekce samotných regionů, ve kterých jich je navrženo několik stovek a jejich následné seskupení do nejlepších z nich. Ty jsou poté transformovány na fixní velikost a pomocí konvoluční neuronové sítě klasifikovány do tříd viz. Obrázek \ref{pic:region_proposal}. Typický představitel je R-CNN \cite{R-CNN}.
+           		Detekci lze rozdělit na dvoustupňovou a jednostupňovou. Dvoustupňová se skládá z prvotní detekce samotných regionů, ve kterých jich je navrženo několik stovek a jejich následné seskupení do nejlepších z nich. Ty jsou poté transformovány na fixní velikost a pomocí konvoluční neuronové sítě klasifikovány do tříd. Typický představitel je R-CNN \cite{R-CNN}.
            		
            		Jednostupňová detekce kombinuje výše zmíněné kroky do jediné konvoluční neuronové sítě (např. YOLO \cite{YOLO}), která predikuje regiony včetně pravděpodobnosti přítomnosti objektu a jejich tříd. To umožňuje rychlejší detekci než u předchozího typu.
            	
            	\subsection{Sémantická segmentace obrazu}
             	Představena byla již metoda, která klasifikuje celý vstupní obraz viz. \ref{subsec:klasifikace_obrazu} a nebo v něm hledá individuální objekty \ref{subsec:detekce_objektu}. Tato se však zabývá klasifikací obrazu na mnohem nižší úrovni, konkrétně úrovni jednotlivých pixelů.
             	
-            	Obecný princip lze popsat tak, že vstupem neuronové sítě je opět obrázek, který je propagován skrze tzv. encoder-decoder strukturu. V části decoder se z obrázku extrahují vlastnosti, které se použijí v decoderu, který zpětně vytvoří matici stejné velikosti jako je vstup jen v podobě masky. Ta obsahuje informace o třídách jednotlivých pixelů a při aplikaci jejího překrytí se vstupním obrázkem lze zjistit, jak která část obrázku byla klasifikována. Jako příklad architektury lze uvést například U-Net \cite{U-Net} původně navržen pro využití v biomedicíně, ale nadále využit i několika dalšími strukturami viz. článek \cite{semantic_segmentation_survey}. 
+            	Obecný princip lze popsat tak, že vstupem neuronové sítě je opět obrázek, který je propagován skrze tzv. encoder-decoder strukturu. V části decoder se z obrázku extrahují vlastnosti, které se použijí v decoderu, který zpětně vytvoří matici stejné velikosti jako je vstup jen v podobě masky. Ta obsahuje informace o třídách jednotlivých pixelů a při aplikaci jejího překrytí se vstupním obrázkem lze zjistit, jak která část obrázku byla klasifikována. Jako příklad architektury lze uvést například U-Net \cite{U-Net} viz. Obrázek \ref{pic:unet} původně navržen pro využití v biomedicíně, ale nadále využit i několika dalšími strukturami viz. článek \cite{semantic_segmentation_survey}.
+            	
+	            	\begin{figure}[h]
+	            		\centering
+	            		\includegraphics[width=.9\textwidth]{Graphics/unet.pdf}
+	            		\caption{Struktura neuronové sítě U-Net definována v \cite{U-Net}. Zdroj \cite{U-Net}}
+	            		\label{pic:unet}
+	            	\end{figure}
             	
             \subsection{Shrnutí}
             	
@@ -360,12 +379,12 @@
     \chapter{Simulátory a datasety}
     	Nasazení nebo dokonce vývoj systémů pro autonomní řízení může být velmi problematický a nebezpečný. Mimo jiné je potřeba funkční prototyp vozidla s veškerými senzory a případně i volný prostor na testování, což se dokáže rychle projevit na potřebných financích.
     	
-    	Naštěstí se většina zmíněných nákladů a problémů dá omezit použitím simulačního softwaru, který dokáže poskytnout jak prostředí, tak senzory a navíc i referenční hodnoty přesného pohybu, kolizí s okolím apod. Výdaje na prvotní testování se tak omezí na minimum. Pro plynulé simulace je však potřeba dostatečně výkonný HW s dedikovanou grafickou kartou, protože dochází při jejím běhu k paralelním výpočtům i dalších pohledů senzorů viz \ref{pic:air_sim_ukazka}, což dokáže PC značně zatížit.
+    	Naštěstí se většina zmíněných nákladů a problémů dá omezit použitím simulačního softwaru, který dokáže poskytnout jak prostředí, tak senzory a navíc i referenční hodnoty přesného pohybu, kolizí s okolím apod. Výdaje na prvotní testování se tak omezí na minimum. Pro plynulé simulace je však potřeba dostatečně výkonný HW s dedikovanou grafickou kartou, protože dochází při jejím běhu k paralelním výpočtům i dalších pohledů senzorů viz \ref{pic:AirSim_ukazka}, což dokáže PC značně zatížit.
     	
     	Následující výběr simulátorů byl sestaven tak, aby byly snadné a rychlé ke spuštění, nevyžadovaly přihlašování pro přístup, fungovaly lokálně a nejlépe jak na platformě Linux, tak i Windows.
     	\section{Simulátory}
     		\subsection{Gym-duckietown}
-    			Prvním simulátorem je gym-duckietown, který vznikl na bázi projektu Duckietown\footnote{\href{https://www.duckietown.org/}{https://www.duckietown.org/}} blíže popsán v \cite{Duckietown}. Ten začal jako předmět na MIT v roce 2016 a rozšířil se po celém světě s iniciativou zpřístupnit vzdělání v oblasti AI a robotiky všem v podobě zdokumentované platformy \textbf{ekosystému???}. Její součástí je právě i zmíněný simulátor, jehož prostředí je generováno na základě standardů popsaných v dokumentaci \ref{}
+    			Prvním simulátorem je gym-duckietown, který vznikl na bázi projektu Duckietown\footnote{\href{https://www.duckietown.org/}{https://www.duckietown.org/}} blíže popsán v \cite{Duckietown}. Ten začal jako předmět na MIT v roce 2016 a rozšířil se po celém světě s iniciativou zpřístupnit vzdělání v oblasti AI a robotiky všem v podobě zdokumentované platformy \textbf{ekosystému???}. Její součástí je právě i zmíněný simulátor, jehož prostředí je generováno na základě standardů popsaných v dokumentaci viz. \cite{duckietown_documentation}.
     			
     			Samotný simulátor je dostupný z \cite{gym_duckietown} s více způsoby instalace. Jelikož je napsaný v jazyce Python, měl by zaručit lepší kompatibility napříč platformami, avšak při testování na Windows 10 nebylo možné jednoduše zprovoznit. Až při použití Docker obrazu \textbf{image???} se ho podařilo spustit s menšími problémy.
     			
@@ -487,14 +506,10 @@
             	Prvkovým násobením masky výskytu hledané barvy s orientací hran z detekce vznikne průnik obou požadavků. Tato nová binární maska bude využita pro další zpracování v následující části \ref{chap:01_postprocessing}.
             	
             	
-                V této fázi nastává chvíle, kdy z obrazových dat extrahujeme potřebná data o směru detekované cesty a její relativní polohy vůči vozítku. Ke stanovení těchto údajů využijeme všechny dříve zmíněné informace. Jako vstup použijeme masku získanou extrakcí cesty v předešlé fázi. Maska ale stále obsahuje šum, který se nepovedlo odstranit a proto se omezíme na dolní část masky a tvorbou histogramu \textbf{součet přes sloupce} získáme jasně viditelné vrcholky, kde se nachází počátek hledaných pruhů nejblíže vozítku. Vybereme tyto dva vrcholky jako startovní body pro následné hledání průběhu jednotlivých pruhů. To probíhá postupným vykreslováním obdélníků přes detekované čáry. Šířka ohraničení je rovná toleranci hledání a výška je zvolena s ohledem na vyvážení výpočetní náročnosti a přesnosti. Pokud dojde v daném řádku k vybočení bodů detekované čáry o stanovený počet pixelů, změní se pozice obdélníku, aby jeho střed byl uprostřed vybočené čáry z přímého směru. Tento proces opakujeme dokud nedosáhneme výšky snímku. Jednotlivé pixely ohraničené obdélníky označíme a spustíme nad nimi algoritmus, který proloží body křivkou. Jelikož víme, že většina cest bývá navrhována za pomoci Clothoid křivek, které lze s mírnou chybou aproximovat kubickou křivkou viz. rovnice \ref{eqn:dukaz_aproximace_clothoidu_polynomem_3st}, proložíme jí označené body. Získané parametry jsou koeficienty jednotlivých křivek. jejich průměrem nalezneme střed cesty s jeho vlastními koeficienty a tuto křivku budeme považovat za ideální trajektorii průjezdu cestou. Ze znalosti obecného tvaru kvadratické rovnice a jejích vlastností určíme tečnu jako \textbf{rovnice pro tečnu a kvadratickou rovnici a lineární rovnici}. Z parametrů tečny získáme polohu středu cesty a její tečnu v daném bodu a tedy ideální polohu vozítka v daném bodě. Tato informace je potřebným vstupem pro regulátor, který bude způsobovat akční zásahy vozítka. Použité vozítko bohužel nemá enkodéry a nejsou tak k dispozici informace o poloze nebo rychlosti. Data z obrazu jsou však díky kameře snímána kousek před vozítkem a jedná se tedy o ideální budoucí pozici, které se musí vozítko snažit přiblížit.
+                V této fázi nastává chvíle, kdy z obrazových dat extrahujeme potřebná data o směru detekované cesty a její relativní polohy vůči vozítku. Ke stanovení těchto údajů využijeme všechny dříve zmíněné informace. Jako vstup použijeme masku získanou extrakcí cesty v předešlé fázi. Maska ale stále obsahuje šum, který se nepovedlo odstranit a proto se omezíme na dolní část masky a tvorbou histogramu \textbf{součet přes sloupce} získáme jasně viditelné vrcholky, kde se nachází počátek hledaných pruhů nejblíže vozítku. Vybereme tyto dva vrcholky jako startovní body pro následné hledání průběhu jednotlivých pruhů. To probíhá postupným vykreslováním obdélníků přes detekované čáry. Šířka ohraničení je rovná toleranci hledání a výška je zvolena s ohledem na vyvážení výpočetní náročnosti a přesnosti. Pokud dojde v daném řádku k vybočení bodů detekované čáry o stanovený počet pixelů, změní se pozice obdélníku, aby jeho střed byl uprostřed vybočené čáry z přímého směru. Tento proces opakujeme dokud nedosáhneme výšky snímku. Jednotlivé pixely ohraničené obdélníky označíme a spustíme nad nimi algoritmus, který proloží body křivkou. Jelikož víme, že většina cest bývá navrhována za pomoci křivek klothoid, které lze s mírnou chybou aproximovat kubickou křivkou viz. rovnice \ref{eqn:dukaz_aproximace_clothoidu_polynomem_3st}, proložíme jí označené body. Získané parametry jsou koeficienty jednotlivých křivek. jejich průměrem nalezneme střed cesty s jeho vlastními koeficienty a tuto křivku budeme považovat za ideální trajektorii průjezdu cestou. Ze znalosti obecného tvaru kvadratické rovnice a jejích vlastností určíme tečnu jako \textbf{rovnice pro tečnu a kvadratickou rovnici a lineární rovnici}. Z parametrů tečny získáme polohu středu cesty a její tečnu v daném bodu a tedy ideální polohu vozítka v daném bodě. Tato informace je potřebným vstupem pro regulátor, který bude způsobovat akční zásahy vozítka. Použité vozítko bohužel nemá enkodéry a nejsou tak k dispozici informace o poloze nebo rychlosti. Data z obrazu jsou však díky kameře snímána kousek před vozítkem a jedná se tedy o ideální budoucí pozici, které se musí vozítko snažit přiblížit.
             \subsection{Regulace pohybu}
                 Jelikož vozítko nemá k dispozici senzor k měření polohy ani rychlosti, jsou možnosti řízení omezené. Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charkteristice motorů, ale také valivému odporu mezi kolem a podložkou.\\
                 Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální budoucí trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na obrázku \ref{pic:regulator_schema}, kdy vnější regulátor bere jako vstup diferenci polohy vozítka od trajektorie. Tato diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu.  Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je pak dále použit jako vstup vnitřního. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme vycentrování vozítka na požadovanou budoucí trajektorii.\\
-                Použité regulátory byly oba typu \(PI\), kde k nastavování parametrů byla použita metoda třetin na rovném úseku testovací trajektorie.
-                
-                Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charakteristice motorů, ale také valivému odporu mezi kolem a podložkou.\\
-                Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na obrázku \ref{pic:regulator_schema}, kdy vnější regulátor použije jako vstupní signál diferenci polohy vozítka od trajektorie. Tato diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu.  Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je dále použit jako vstup vnitřního regulátoru. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme vycentrování vozítka na požadovanou trajektorii.\\
                 Použité regulátory byly oba typu \(PI\), kde k nastavování parametrů byla použita metoda třetin na rovném úseku testovací trajektorie.
                  
                 \textbf{opravit informace o regulátoru a jakým způsobem pracuje a jak byl navržen apod.....mrknout na jetbota}
@@ -529,6 +544,6 @@
     %		BACK COVER
     % _____________________________________________________________________________
     %
-    \setbackpagesign{img/qr-code}
+    \setbackpagesign{img/qr-code.pdf}
     \backpage
 \end{document}
