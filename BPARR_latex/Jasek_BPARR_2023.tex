@@ -97,7 +97,7 @@
         
         Zatímco výše zmíněné systémy slouží spíše pro podporu řidiče a zvýšení bezpečnosti, v systémech s autonomií stupně 3 až 5 se z člověka stává pasažér, kdy automobil zastává veškeré povinnosti řidiče. Tato práce se zabývá problematikou udržení vozidla v jízdním pruhu, jež je součástí systému ve všech stupních kromě 0. Z toho je patrné, že se jedná o jeden ze stavebních kamenů celého autonomního řízení vozidla.\\
     \section{Bezpečnost autonomních vozidel}
-    	Dopíšu ke konci...není prioritou
+    	Dopíšu ke konci...není prioritou \textbf{VYPUSTIT???}
 	% _____________________________________________________________________________
 	%
 	%
@@ -126,7 +126,7 @@
                 
                 Avšak při optimalizaci detekce pro dálnici lze uvažovat, že na zpracovávaném úseku budou hranice cesty tvořit rovnoběžné přímky. Stejný model však nebude dobře aproximovat trasy s prudšími zatáčkami a bude potřeba použít jiný model na bázi křivek (spline). Při výběru je nutné zohlednit i maximální rychlost, podle které je nutné přizpůsobit nejen viditelnost, ale právě i model. Pokud se totiž vozidlo bude pohybovat velmi malou rychlostí, lze použít jednodušší lineární model, protože na krátkém úseku lze potřebnou část cesty aproximovat opět přímkou i když se jedná o zatáčku.
                 
-                Dalším parametrem je požadovaná viditelnost, která může být ovlivněna reakční dobou systému za kterou by měl vozidlo zastavit nebo vyvinout zásah eliminující nenadálé krizové situace. V tomto případě je nutné v modelu uvažovat i fyzikální vlastnosti samotného vozidla. Touto problematikou se však v tato práce zabývat nebude \textbf{pro chybějící senzory na testovacím zařízení a tedy nemožnosti aproximovat chování vozidla lineárním modelem -- VYPUSTIT??}.
+                Dalším parametrem je požadovaná viditelnost, která může být ovlivněna reakční dobou systému za kterou by měl vozidlo zastavit nebo vyvinout zásah eliminující nenadálé krizové situace. V tomto případě je nutné v modelu uvažovat i fyzikální vlastnosti samotného vozidla. Tato práce se, ale bude zabývat primárně problematikou detekce pruhů z kamery, pro kterou není takto pokročilý model potřeba. \textbf{Takto je to lepší?}.
                 
                 	\begin{figure}[h]
                 		\centering
@@ -193,13 +193,13 @@
                         \label{eqn:dukaz_aproximace_clothoidu_polynomem_3st}
                     \end{eqnarray}
                 která říká, že klotoidu lze aproximovat polynomem třetího stupně
-                    \begin{equation}
+                    \begin{equation}\label{eqn:aproximace_klotoidy}
                         y = k x^{3},
                     \end{equation}
                 což značně zjednoduší budoucí výpočty z původní numerické integrace.
                     %\todo{https://cs.wikipedia.org/wiki/Klotoida#/media/Soubor:Cornu_Spiral.svg}
                 
-            \subsection{Extrakce značení cesty}
+            \subsection{Extrakce značení cesty}\label{sec:extrakce_znaceni}
                 %https://stackoverflow.com/questions/48469889/how-to-fit-a-polynomial-with-some-of-the-coefficients-constrained
                 %https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.fit.html#numpy.polynomial.polynomial.Polynomial.fit
                 Vzhledem k různorodému dopravnímu značení nejen v jednotlivých státech, ale i jeho stavu v oblastech samotných států je obtížné navrhnout algoritmus spolehlivě detekující potřebné hranice cesty. Kromě samotného prostředí mohou mít na kvalitu značení vliv i parametry jako jsou stíny, déšť nebo samotná kvalita či opotřebení viz. Obrázek \ref{pic:line_quality}. To můžou být důvody proč například jednoduché metody na bázi hranové detekce selžou. 
@@ -207,7 +207,7 @@
                 	\begin{figure}[ht]
                 		\centering
                 		\includegraphics[width=.75\textwidth]{Graphics/lane_quality.png}
-                		\caption{Fotografie různých variant stavu značení nebo podmínek. Cesta (a) zobrazující optimální plnou a přerušovanou čáru, (b) nejednolitý povrch vozovky, (c) , (d), (e), (f)...\textbf{Mám to tady nechat nebo jen odkázat na článek, kde jsem to našel?}}
+                		\caption{Fotografie různých variant stavu značení nebo podmínek. Cesta (a) zobrazující optimální plnou a přerušovanou čáru, (b) nejednolitý povrch vozovky, (c) poškozené horizontální značení , (d) špatná kvalita čar a přítomnost stínů (e) a (f). Zdroj \cite{VIOLET}.}
                 		\label{pic:line_quality}
                 	\end{figure}
                 
@@ -247,7 +247,7 @@
                 Protože jsou parametry polynomu známé, z vlastností křivky lze určit polohu počátku při dolní hranici obrazu a za pomoci derivace získat i její tečnu. Ta udává informaci o relativním natočení vozítka vzhledem k nalezené ideální trase. Tyto hodnoty budou sloužit jako vstup do regulátoru.
                 
             \subsection{Ovládání pohybu vozítka}
-            	Pro samotný pohyb je potřeba hodnoty z minulé sekce transformovat na akční zásah akceptovatelný softwarem vozítka. V případě modelového příkladu jsou k dispozici dva akční zásahy v rozsahu \(<-1,1\), jeden pro každý motor odpovídajícího kola.
+            	Pro samotný pohyb je potřeba hodnoty z minulé sekce transformovat na akční zásah akceptovatelný softwarem vozítka. V případě modelového příkladu jsou k dispozici dva akční zásahy v rozsahu \(<-1,1>\), jeden pro každý motor odpovídajícího kola.
             	
                 Použití výstupu detekce přímo k řízení vozidla není vhodné pro jeho šum nebo chybné detekce. Lepších výsledků je možné dosáhnout použitím regulátoru ke sledování reference v podobě polohy ideální trasy. K dispozici jsou dva vstupy a to natočení vozidla od tečny ideální trasy a jeho vzdálenost od počátku křivky při dolním okraji obrazu. To jsou dva parametry, které jsou důležité pro regulaci a protože se navzájem ovlivňují, zavedeme oba tyto parametry jako vstup do regulátoru.
                 
@@ -257,19 +257,21 @@
                 
                 \begin{figure}[h]
                 	\centering
-                	\includegraphics[width=.7\textwidth]{Graphics/loading.jpg}
+                	\includegraphics[width=.7\textwidth]{Graphics/regulator_schema_01.pdf}
                 	\caption{Blokové schéma navrženého kaskádního regulátoru s dvěma vstupy.}
                 	\label{pic:regulator_schema}
                 \end{figure}
+            \subsection{Shrnutí}
+            	Ačkoliv je algoritmické řešení v základu jednoduché a pochopitelné, obsahuje řadu omezení, které musí být kompenzovány implementací složitějších funkcí. Jak bylo zmíněno v textu výše, hlavní překážkou algoritmického řešení jsou reálné podmínky, které mohou být variabilní i v rámci relativně krátkého úseku například v podobě stínů nebo mokré vozovky. Jeho velkou výhodou je ale to, že pro svůj chod ve většině případů nepotřebuje specifický hardware v podobě například grafické karty a je tak přístupnější a při zajištění správných podmínek bude spolehlivě fungovat. 
             
-        \section{Reinforcement learning řešení}
+        \section{Řešení pomocí zpětnovazebního učení}
             Reinforcement learning známý také jako zpětnovazebné učení je specifický přístup strojového učení řešící daný problém bez přímého zásahu člověka na základě maximalizace zisku odměn přidělovaných za co nejlepší splnění specifický podmínek.
             
             Základní struktura se skládá z agenta a prostředí. Agent je algoritmus, který volí jednotlivé kroky a interaguje s prostředím, které reprezentuje model daného problému a vrací aktuální stav (reakci na danou akci) spolu s odměnou za danou akci. Tato odměna je dána tzv. reward funkcí, specifikovanou podle řešeného problému. Například při použití prostředí ze hry, kde je potřeba sbírat dané předměty pro vítězství může být analogií k odměnám skóre daného hráče (agenta) a reward funkce zde bude počítat dosažené předměty a jejich individuální hodnotu. Pokud by tedy agent chtěl maximalizovat odměnu za danou hru může se stát, že bude sbírat pouze nejhodnotnější předměty, aby co nejrychleji nabyl nejvyšší odměny.
             
             Jak je patrné z předešlého příkladu, hlavním parametrem ovlivňující chování agenta je reward funkce. Ta musí být správně specifikována a implementována, čímž se vytyčí priority, které se má agent naučit. Pokud například nezahrneme čas v podobě záporné odměny za uplynulé sekundy, nelze očekávat že prioritou pro agenta bude nasbírat odměny rychle.
             
-            Další důležitou volbou je struktura samotného agenta. Existují dvě možnosti. Buď implementací algoritmu nebo pomocí neuronové sítě. Algoritmus si bude pamatovat akce nebo jejich posloupnosti s nejvyšší hodnotou aby je byl schopen později aplikovat sám mimo fázi učení. Neuronová síť bude na základě odměn nastavovat své vnitřní parametry a výsledkem učení bude natrénovaný model schopný hrát danou hru nebo řešit problém. V dalších odstavcích se bude text věnovat primárně přístupu pomocí NN\textbf{ neboť se jedná o modernější přístup - VYPUSTIT?}.
+            Další důležitou volbou je struktura samotného agenta. Existují dvě možnosti. Buď implementací algoritmu nebo pomocí neuronové sítě. Algoritmus si bude pamatovat akce nebo jejich posloupnosti s nejvyšší hodnotou aby je byl schopen později aplikovat sám mimo fázi učení. Neuronová síť bude na základě odměn nastavovat své vnitřní parametry a výsledkem učení bude natrénovaný model schopný hrát danou hru nebo řešit problém. V dalších odstavcích se bude text věnovat primárně přístupu pomocí NN.
             
             Při použití NN se používá buď učení s učitelem a nebo bez učitele , ale dle \cite[p.~2]{RLbook} nespadá RL ani do jedné třídy jelikož učení zde stojí na přímé interakci s prostředím a zároveň se nesnaží najít strukturu v poskytnutých datech ale maximalizovat odměnu jako výsledek uskutečněných akcí.
             
@@ -308,7 +310,7 @@
             		\begin{figure}[h]
             			\centering
             			\includegraphics[width=.5\textwidth]{Graphics/A2C_schema.pdf}
-            			\caption{Schéma RL metody actor-critic.}
+            			\caption{Schéma RL metody actor-critic. Zdroj \cite{autopilot}}
             			\label{pic:actor_critic}
             		\end{figure}
             		
@@ -317,9 +319,9 @@
 	            Při trénování se postupuje postupně z fáze objevování (exploration) do využívání(exploitation) přičemž se zmenšuje náhodný šum přidávaný k akcím. Po daném počtu epoch se upraví struktura actora aplikací parametrů critica, který se snaží najít optimální Q-funkci minimalizující kumulativní ztrátovou funkci odměn, zatímco actor se snaží volit správnou akci pomocí poklesu gradientu. Výhodou je, že dokáže zpracovávat spojité vstupy a reagovat spojitými akčními zásahy, což je výhodné při aplikaci na hraní her, které zmíněné vstupy vyžadují.
 	            
         	\subsection{Shrnutí}
-        		Přes značné výhody RL přístupu, který nepotřebuje žádný model ani trénovací dataset se pojí několik negativ. Při trénování výše zmíněných modelů je potřeba stanovení správné funkce odměny, která má ve většině případů zásadní vliv na funkčnost a je potřeba dopředu myslet na striktní omezení a požadavky na agenta. Dále může být problematické samotné prostředí, ve kterém se bude pohybovat. V případě chyb nebo porušení pravidel je potřeba agenta resetovat do startovní pozice, což může být ve fyzickém prostředí problém. Posledním hlavním problémem je délka trénování v případě operace agenta v prostředí s reálným časem.
+        		Přes značné výhody RL přístupu, který nepotřebuje žádný model ani trénovací dataset se pojí několik negativ. Při trénování výše zmíněných modelů je potřeba stanovení správné funkce odměny, která má ve většině případů zásadní vliv na funkčnost a je potřeba dopředu myslet na striktní omezení a požadavky na agenta. Dále může být problematické samotné prostředí, ve kterém se bude pohybovat. V případě chyb nebo porušení pravidel je potřeba agenta resetovat do startovní pozice, což může být ve fyzickém prostředí problém. Posledním hlavním problémem je délka trénování v případě operace agenta v prostředí s reálným časem. Některé problémy však mohou být vyřešeny buď použitím simulátorů a nebo specifických knihoven pro vývoj RL algoritmů jako je například OpenAI Gym \cite{openai_gym}
             
-        \section{Řešení pomocí hlubokého učení}
+        \section{Řešení pomocí hlubokého učení}\label{sec:reseni_deep_learning}
         	S nedávným nárůstem výpočetního výkonu a optimalizace specifického hardwaru se stalo hluboké učení dostupnější. Vznikem frameworků jako je PyTorch, Keras a TensorFlow pro práci se strukturami neuronových sítích v populárních programovacích jazycích se zpřístupnila a zjednodušila práce s nimi. Nebylo již nutné programovat vlastní funkce a metody a tak se více lidí mohlo zapojit do vývoje složitějších architektur a soustředit se na stavbu samotných neuronových sítí. Dnes již existuje spoustu návodů i mimo výzkumné práce, ať už specifických pro zmíněné frameworky a nebo těch sdílených komunitou.
             
 	            \begin{figure}[h]
@@ -331,7 +333,7 @@
 	            
             Samotné neuronové jsou matematické modely inspirované biologickým nervovým systémem, kde je nejmenší stavební jednotkou jeden neuron nazývaný také jako perceptron viz Obrázek \ref{pic:perceptron}. Ten je matematicky reprezentován jako funkce 
             \[y=f(\mathbf{W}\cdot\mathbf{X} + b),\]
-            kde \(\mathbf{W}\) je vektor vah, \(\mathbf{X}\) vektor vstupů, \(b\) je \textbf{hodnota zkreslení???} a \(f\) aktivační funkce transformující vstupní hodnotu součtu na danou výstupní funkci. Z paralelně zapojených perceptronů se skládají jednotlivé vrstvy, které se řetězí dále do podoby požadované neuronové sítě např. viz. Obrázek \ref{pic:basic_nn}. Učení pak probíhá nastavování zmíněných vnitřních parametrů za pomoci gradientu vypočteném v dimenzi rovné počtu vstupů. Podrobnější informace o fungování lze získat z \cite{neural_networks_background_01,neural_networks_background_02}.
+            kde \(\mathbf{W}\) je vektor vah, \(\mathbf{X}\) vektor vstupů, \(b\) je práh a \(f\) aktivační funkce transformující vstupní hodnotu součtu na danou výstupní funkci. Z paralelně zapojených perceptronů se skládají jednotlivé vrstvy, které se řetězí dále do podoby požadované neuronové sítě např. viz. Obrázek \ref{pic:basic_nn}. Učení pak probíhá nastavování zmíněných vnitřních parametrů za pomoci gradientu vypočteném v dimenzi rovné počtu vstupů. Podrobnější informace o fungování lze získat z \cite{neural_networks_background_01,neural_networks_background_02}.
             
 	            \begin{figure}[h]
 	            	\centering
@@ -365,10 +367,20 @@
 	            	\end{figure}
             	
             \subsection{Shrnutí}
+            	Obecně lze výše zmíněné metody shrnout do dvou kategorií, dvou stupňovou a jedno stupňovou. Dvou krokovou lze rozumět specifický přístup, kdy vybraná neuronová síť vykoná pouze část celkové detekce, a to zpravidla extrakci vlastností. Následný krok zpracuje výstup neuronové sítě a provede výsledné úpravy jako je např. proložení polynomem.
             	
+            	Jedno kroková kategorie se týká metod a architektur, které v jednom kroku sjednotí výše zmíněné činnosti do jedné neuronové sítě.
+            	
+            	Přístupy zmíněné v předchozích sekcí se dají použít k detekci pruhů různými způsoby. Klasifikaci lze využít k detekci polohy čar při velmi jednoduchém úkolu, neboť je vstupem celý obraz a výstupem pouze pravděpodobnosti jednotlivých tříd. Lze tedy klasifikovat i směr čar za předpokladu velkého množství výstupních tříd a také minimálním rušením v podobě jiných objektů. Klasifikace se již dnes pro své vysoko-úrovňové zpracování na detekci čar nepoužívá a dává se přednost pokročilejším nástrojům.
+            	
+            	Detekce objektů je v autonomním řízení hojně používána, avšak spíše než pro detekci čar, tak pro rozpoznávání vertikálního dopravního značení ostatních účastníků provozu nebo objektů v blízkém okolí silnice (popelnice, stromy apod.). Při detekci čar by pro dostatečnou přesnost bylo nutné detekovat buď jednotlivé pruhy například přerušovaného pruhu a z pozice rekonstruovat jeho skutečný průběh. Pro tento účel se dává dnes přednost poslední možnosti.
+            	
+            	Sémantická segmentace obrazu je v detekci čar suverénně nejlepší volbou z výše zmíněných. Se svojí přesností detekce na úrovni jednotlivých pixelů rozdělí celý vstupní obraz na jednotlivé regiony se svou kategorií. Ty lze pak separátně zpracovat a soustředit se v případě čar, pouze na odpovídající kategorii. V jistém úhlu pohledu dokáže nahradit zmíněnou detekci objektů s detailnější detekcí, ale nutno podotknout, že na rozdíl od ní není výstupem přímo souřadnice objektu s vymezeným prostorem, kde se nachází v podobě tzv. "bounding boxu\footnote{Obdélník přesně ohraničující detekovaný objekt s minimem okolí.}", ale shluk klasifikovaných pixelů. Ten může vyžadovat další zpracování jako je vyhlazování nebo shlukování pro výsledné určení polohy objektu.
+            	
+            	Poslední zmíněné metody pro svou přesnost a úspěšnost vyžadují velmi přesná trénovací data, která jsou často ručně anotována lidmi a proto velmi finančně a časově náročná. Naštěstí v poslední době díky většímu povědomí a zájmu firem rozvíjet se v této oblasti vzniká spoustu datasetů pro úlohy autonomního řízení z reálného prostředí nebo syntetických za pomoci simulací, což je více rozebráno v kapitole \ref{chap:simulatory}.
             
-    	\section{Problematika prostředí}
-    		Popis toho jak má negativní vliv různé standardy napříč světem v komunikacích a jaký mají vliv nepředvídatelné akce účastníků provozu.
+    	\section{Porovnání přístupů}
+    		Na úlohu udržení vozidla v jízdním pruhu je možné aplikovat libovolný ze zmíněných přístupů. Algoritmický nabídne jednoduchost a srozumitelnost použitím zavedených algoritmů avšak za cenu vyšší citlivosti na změny prostředí. Zpětnovazební učení je náročnější na správný návrh agenta, hodnotící funkce a v případě reálného prostředí i na čas, ale za to dokáže ve výsledku i sám vozítkem pohybovat bez potřeby regulátoru v případě takového návrhu. Hluboké učení je dnes již velmi pokročilé a s nárůstem výpočetního výkonu i dostupnější. Podstatné pro něj je vytvořit kvalitní dataset a použít správnou architekturu. Bohužel ne veškeré chování je popsané a může tak dojít k chybám, které díky komplexnosti dnešních neuronových sítí nelze jednoduše vysvětlit.
 	% _____________________________________________________________________________
 	%
 	%
@@ -376,22 +388,20 @@
 	%
 	% _____________________________________________________________________________
 	%
-    \chapter{Simulátory a datasety}
+    \chapter{Simulátory a datasety}\label{chap:simulatory}
     	Nasazení nebo dokonce vývoj systémů pro autonomní řízení může být velmi problematický a nebezpečný. Mimo jiné je potřeba funkční prototyp vozidla s veškerými senzory a případně i volný prostor na testování, což se dokáže rychle projevit na potřebných financích.
     	
     	Naštěstí se většina zmíněných nákladů a problémů dá omezit použitím simulačního softwaru, který dokáže poskytnout jak prostředí, tak senzory a navíc i referenční hodnoty přesného pohybu, kolizí s okolím apod. Výdaje na prvotní testování se tak omezí na minimum. Pro plynulé simulace je však potřeba dostatečně výkonný HW s dedikovanou grafickou kartou, protože dochází při jejím běhu k paralelním výpočtům i dalších pohledů senzorů viz \ref{pic:AirSim_ukazka}, což dokáže PC značně zatížit.
-    	
-    	Následující výběr simulátorů byl sestaven tak, aby byly snadné a rychlé ke spuštění, nevyžadovaly přihlašování pro přístup, fungovaly lokálně a nejlépe jak na platformě Linux, tak i Windows.
     	\section{Simulátory}
+    		Následující výběr simulátorů byl sestaven tak, aby byly snadné a rychlé ke spuštění, nevyžadovaly přihlašování pro přístup, fungovaly lokálně a nejlépe jak na platformě Linux, tak i Windows.
     		\subsection{Gym-duckietown}
-    			Prvním simulátorem je gym-duckietown, který vznikl na bázi projektu Duckietown\footnote{\href{https://www.duckietown.org/}{https://www.duckietown.org/}} blíže popsán v \cite{Duckietown}. Ten začal jako předmět na MIT v roce 2016 a rozšířil se po celém světě s iniciativou zpřístupnit vzdělání v oblasti AI a robotiky všem v podobě zdokumentované platformy \textbf{ekosystému???}. Její součástí je právě i zmíněný simulátor, jehož prostředí je generováno na základě standardů popsaných v dokumentaci viz. \cite{duckietown_documentation}.
+    			Prvním simulátorem je gym-duckietown, který vznikl na bázi projektu Duckietown\footnote{\href{https://www.duckietown.org/}{https://www.duckietown.org/}} blíže popsán v \cite{Duckietown}. Ten začal jako předmět na MIT v roce 2016 a rozšířil se po celém světě s iniciativou zpřístupnit vzdělání v oblasti AI a robotiky všem v podobě zdokumentované vzdělávací platformy. Její součástí je právě i zmíněný simulátor, jehož prostředí je generováno na základě standardů popsaných v dokumentaci viz. \cite{duckietown_documentation}.
     			
-    			Samotný simulátor je dostupný z \cite{gym_duckietown} s více způsoby instalace. Jelikož je napsaný v jazyce Python, měl by zaručit lepší kompatibility napříč platformami, avšak při testování na Windows 10 nebylo možné jednoduše zprovoznit. Až při použití Docker obrazu \textbf{image???} se ho podařilo spustit s menšími problémy.
+    			Samotný simulátor je dostupný z \cite{gym_duckietown} s více způsoby instalace. Jelikož je napsaný v jazyce Python, měl by zaručit lepší kompatibility napříč platformami, avšak při testování na Windows 10 nebylo možné jednoduše zprovoznit. Až při použití docker obrazu se ho podařilo spustit s menšími problémy.
     			
-    			Po pull odpovídajícího docker image bylo nutné přidat do run příkazu flag 
-    			\command"-e DISPLAY=host.docker.internal:0.0" a nainstaovat aplikaci XLaunch\footnote{\href{http://www.straightrunning.com/XmingNotes/}{http://www.straightrunning.com/XmingNotes/}} pro přesměrování grafického prostředí z docker kontejneru do windows. Nutno podotknout, že při použití platformy linux by nemělo být potřeba podstupovat zmíněné kroky, což ale nebylo otestováno.
+    			Po pull odpovídajícího docker obrazu bylo nutné upravit spouštěcí příkaz a nainstalovat aplikaci XLaunch\footnote{\href{http://www.straightrunning.com/XmingNotes/}{http://www.straightrunning.com/XmingNotes/}} pro přesměrování grafického prostředí z docker kontejneru do Windows. Nutno podotknout, že při použití platformy Linux by nemělo být potřeba podstupovat zmíněné kroky, což ale nebylo otestováno.
     			
-    			Simulátor lze dále ovládat za pomoci python skriptů. Více informací k možnostem simulátoru lze získat ze zmíněného repository, z dokumentace viz. \href{https://docs-old.duckietown.org/daffy/}{https://docs-old.duckietown.org/daffy/} nebo z článku o soutěži AI-DO \cite{AI-DO}.
+    			Simulátor lze dále ovládat za pomoci python skriptů. Více informací k možnostem simulátoru lze získat ze zmíněného repository, z dokumentace viz. \cite{duckietown_documentation} nebo z článku o soutěži AI-DO \cite{AI-DO}.
 	    			\begin{figure}[h]
 	    				\centering
 	    				\includegraphics[width=.6\textwidth]{Graphics/gym_duckietown_ukazka.png}
@@ -399,7 +409,7 @@
 	    			\end{figure}
     			
     		\subsection{AirSim}
-    			Pokročilejším simulátorem je dnes již archivovaný AirSim vyvíjený jako opensource společností Microsoft od roku 2017 do 2022 blíže popsán v článku \cite{airsim_paper}. Jeho zdrojový kód i kompilované binární soubory jsou stále k dispozici na stránkách \href{https://github.com/microsoft/AirSim}{https://github.com/microsoft/AirSim}.
+    			Pokročilejším simulátorem je dnes již archivovaný AirSim vyvíjený jako opensource společností Microsoft od roku 2017 do 2022 blíže popsán v článku \cite{airsim_paper}. Jeho zdrojový kód i kompilované binární soubory jsou stále k dispozici na stránkách \cite{airsim_github}.
     			
     				\begin{figure}[h]
 	    				\centering
@@ -410,7 +420,7 @@
     			
     			Narozdíl od předchozího je postaven na Unreal Engine (C++), ale nabízí i experimentální Unity (C\#) vydání, což umožňuje větší prostor ve výkonu díky rychlejším programovacím jazykům. Nabídne tak pokročilejší prostředí s vyšším detailem, ovládání počasí a v úvodu zmíněné různé pohledy viz. Obrázek \ref{pic:AirSim_ukazka} a senzory.
     			
-    			Ovládání vozidla je provozováno přes Python nebo C++ API popsané v dokumentaci \href{https://microsoft.github.io/AirSim/}{https://microsoft.github.io/AirSim/} a rovněž je možné ovládat více agentů ve stejném světě.
+    			Ovládání vozidla je provozováno přes Python nebo C++ API popsané v dokumentaci \cite{airsim_documentation} a rovněž je možné ovládat více agentů ve stejném světě.
 	    		
 	    	\subsection{Carla}
 	    		Další pokročilý open-source simulátor Carla na bázi Unreal Engine (C++) nabízí podobně jako AirSim realistickou simulaci a ovládání pomocí Python a C++ API. Navíc je zde také možné mít větší kontrolu nad množstvím generovaných NPC aut a osob. Nabízí také vlastní autopilot, který je možné kdykoliv zapnout a případně porovnávat s vlastním řešením.
@@ -424,7 +434,7 @@
 	    		
 	    		Při vytvoření nového agenta se otevře nové okno s jeho vizualizací viz. Obrázek \ref{pic:Carla_ukazka} a je tak možné ovládat manuálně jednotlivé agenty a vidět jejich separátní pohledy. S těmito možnostmi však přichází daleko vyšší požadavky na HW.
 	    		
-	    		Narozdíl od AirSim poskytuje realističtější fyziku a samotná NPC reagují na agenta např, že zastaví a při srážce se chovají jak by se očekávalo ve skutečnosti. Prostředí je vymodelováno od nuly a jeho komunikace jsou navrženy podle standardu OpenDRIVE\textsuperscript{\textregistered} verze 1.4 dostupného z \href{https://www.asam.net/standards/detail/opendrive/}{https://www.asam.net/standards/detail/opendrive/}.
+	    		Narozdíl od AirSim poskytuje realističtější fyziku a samotná NPC reagují na agenta např, že zastaví a při srážce se chovají jak by se očekávalo ve skutečnosti. Prostředí je vymodelováno od nuly a jeho komunikace jsou navrženy podle standardu OpenDRIVE\textsuperscript{\textregistered} verze 1.4 dostupného z \cite{OpenDrive}.
 	    		
 	    	\subsection{Shrnutí}
 	    		Ačkoliv se gym-duckietown nejeví jako pokročilý simulátor, je postaven na základech existující platformy duckietown se spoustou návodů a soutěží, ze kterých se lze mnohé naučit. Samotnou mapu lze také individuálně navrhnout.
@@ -453,25 +463,26 @@
     		\paragraph{Appoloscape}
     			Dataset popsaný v \cite{dataset_ApolloScape_paper}, vytvořený čínskou firmou "Baidu Research" v rámci projektu Apollo \cite{Apollo}. Na jejich webu \cite{dataset_ApolloScape} jsou dostupné ukázky jednotlivých typů včetně nástrojů a návodů pro manipulaci, ale plnou verzi datasetu lze získat jen po zaslání emailové žádosti.
     		\paragraph{Argoverse}
-    			Dataset vzniklý ve spolupráci organizace "Argo AI" a studentů a fakult univerzit "Carnegie Mellon University" a "Georgia Institute of Technology"  obsahující dvě verze viz \cite{dataset_Argoverse1_paper, dataset_Argoverse2_paper}. Obě se ale zaměřují primárně na predikci pohybu objektů, obsahují velmi detailní data z LiDARU, obrazu a také mapy prostředí, kde byla data sbírána. Ke stažení je z webových stránek projektu \cite{dataset_Argoverse}.
+    			Dataset vzniklý ve spolupráci organizace "Argo AI" a studentů a fakult univerzit "Carnegie Mellon University" a "Georgia Institute of Technology"  obsahující dvě verze viz články \cite{dataset_Argoverse1_paper, dataset_Argoverse2_paper}. Obě se ale zaměřují primárně na predikci pohybu objektů, obsahují velmi detailní data z LiDARU, obrazu a také mapy prostředí, kde byla data sbírána. Ke stažení je z webových stránek projektu \cite{dataset_Argoverse}.
    			\paragraph{Cityscapes}
-   				\href{https://www.cityscapes-dataset.com/}{https://www.cityscapes-dataset.com/}
-  			\paragraph{comma2k19}
-  				\href{https://github.com/commaai/comma2k19}{https://github.com/commaai/comma2k19}
+   				Dataset vzniklý dle článku \cite{dataset_cityscapes_paper} ve spolupráci firmy Daimler, univerzit "TU Darmstadt", "TU Dresden" a institutu "MPI Informatics". Jeho motivací bylo zpřístupnit dataset, který zachycuje pomocí stereovize komplexitu reálného světa dle autorů lépe než v tu dobu dostupné alternativy. Ke stažení jsou z jejich webových stránek \cite{dataset_cityscapes} ukázky a po registraci i plná verze.
+  			\paragraph{Comma2k19}
+  				Dataset vytvořený společností Comma \cite{Comma}, která se zabývá vývojem open-source autopilotem použitelným ve více než 250 modelech aut. Ve článku \cite{dataset_comma2k19_paper} autoři zmiňují, že se při sběru dat orientovali hlavně na kvalitu a využití již stávajících senzorů za pomoci napojení na komunikaci CAN. Ty byly dále obohaceny o kameru, akcelerometr a mimo jiné i GNSS daty zpracovanými knihovnou Laika \cite{Laika} pro větší přesnost. Stažení je dostupné přes torrent zde \cite{dataset_comma2k19_github, dataset_comma2k19_download}.
   			\paragraph{BDD100K}
-  				Paper \cite{bdd100k} odkazuje na dataset zde \href{https://bdd-data.berkeley.edu/}{https://bdd-data.berkeley.edu/}
+  				Dataset vzniklý ve spolupráci společnosti "Element, Inc." a univerzit "UC Berkley", "Cornell University" a "UC San Diego" s cílem vytvořit adekvátně velký dataset pro moderní autonomní systémy. Dle článku \cite{dataset_bdd100k_paper} obsahuje 100 tisíc anotovaných videí včetně lokalizačních dat. Ke stažení je po registraci na stránkách \cite{dataset_bdd100k}.
   			\paragraph{PixSet Dataset}
-  				Vytvořeno firmou LeddarTech. ke stažení zde \href{https://leddartech.com/solutions/leddar-pixset-dataset/}{https://leddartech.com/solutions/leddar-pixset-dataset/}
-  			\paragraph{Nuscenes}
+  				Dataset vytvořen firmou LeddarTech. Mimo obrazová data obsahuje i surová data z LiDAR senzorů. Ke stažení je po registraci ze stránek \cite{dataset_pixset} a popsaný ve článku \cite{dataset_pixset_paper}.
+  			\paragraph{NuScenes}
+  				Dataset vytvořený firmou Motional. Obsahuje data jak pro úlohu segmenatace a detekce objektů, tak pro plánování trasy. Na stránkách \cite{dataset_nuscenes} je po registraci možné data stáhnout a následně i vlastní přístup otestovat a porovnat s dalšími řešeními.
   				\href{https://www.nuscenes.org/}{https://www.nuscenes.org/}
   			\paragraph{Oxford RobotCar Dataset}
-  				\href{https://robotcar-dataset.robots.ox.ac.uk/}{https://robotcar-dataset.robots.ox.ac.uk/}
+  				Dataset vytvořený Oxfordskou univerzitou se záměrem poskytnout data stejného prostředí s měnícími se podmínkami a důrazem na lokalizaci, strereovizi a mapování jak je popsáno v článku \cite{dataset_RobotCarDataset_paper} a po registraci ke stažení na stránkách \cite{dataset_RobotCarDataset}.
   			\paragraph{PandaSet}
-  				\href{https://pandaset.org/}{https://pandaset.org/}
+  				Dataset vytvořený ve spolupráci společností Scale a Hesai orientovaný převážně na mapování prostředí za pomoci stereovize a LiDARů. Spolu s bližšími informacemi je ke stažení po registraci na jejich webových stránkách \cite{dataset_Pandaset}.
   			\paragraph{Udacity Car Dataset}
-  				\href{https://public.roboflow.com/object-detection/self-driving-car}{https://public.roboflow.com/object-detection/self-driving-car}
+  				Dataset vytvořený vzdělávací společností Udacity v rámci programu autonomního automobilu viz. \cite{dataset_Udacity_project} obsahující data vhodná pro trénování či testování detekce objektů. Ke stažení je z oficiálního GitHub repository \cite{dataset_Udacity} bez registrace.
   			\paragraph{Waymo Open Dataset}
-  				\href{https://waymo.com/open/}{https://waymo.com/open/} Potřebuje přihlášení.
+  				Dataset vytvořený ve spolupráci Waymo a Google s cílem zprostředkovat veřejnosti data pro další vývoj a výzkum v oblasti autonomního řízení a strojového vidění. Obsahuje jak data ze senzorů (kamery, LiDAR, etc.), tak i dataset s pohybem objektů a odpovídající 3D mapy. Po registraci je dostupný ze stránek \cite{dataset_Waymo}.
   			\subsection{Shrnutí}
   				Jak je vidět výše, existuje spoustu anotovaných datasetů, z nihž některé nabízí i data ze senzorů nebo možnost porovnání výsledků. Naopak Většina těchto kvalitních datasetů není možné použít pro komerční vývoj bez zakoupení licence většinou zpravidla danou komunikací s vlastníkem. Existuje spoustu dalších zdrojů nebo portálů jako je například Kaggle \cite{Kaggle}, Roboflow \cite{Roboflow} a další. U nich je však potřeba si dávat pozor na kvalitu a správnost anotací i samotného obsahu narozdíl od datasetů vytvořených tak, aby nad nimi probíhala soutěž nebo vývoj na univerzitě nebo v automobilce, u kterých lze předpokládat vyšší kvalitu.
 	% _____________________________________________________________________________
@@ -482,41 +493,232 @@
 	% _____________________________________________________________________________
 	%
     \chapter{Praktická část - řešení}
-        Bla bla úvod do praktické části.
+        V následujícím textu bude popsán postup při implementaci dvou metod popsaných v teoretické části. Konkrétně se jedná přístup algoritmický a pomocí hlubokého učení.
         \section{Použité prostředky}
-            Jako základní HW, který byl uvažován pro demonstrační modelové příklady byl dvoukolový robot ovládaný jednodeskovým počítačem Jetson Nano B01 \textbf{přidat obrázek} dodaný jako set od firmy Sparkfun.
-            \textbf{použitý HW a SW}
+            Jako základní HW, který byl uvažován pro demonstrační modelové příklady je dvoukolový diferenciální robot ovládaný jednodeskovým počítačem Jetson Nano B01 \textbf{přidat obrázek} dodaný jako set od firmy Sparkfun viz Obrázek \ref{pic:sparkfun_jetbot}.
+            	\begin{figure}[h]
+            		\centering
+            		\includegraphics[width=.4\textwidth]{./Graphics/sparkfun_jetbot.jpg}
+            		\caption{Použitý kit robota s jednodeskovým počítačem Jetson Nano B01. Zdroj \cite{sparkfun_jetbot} }
+            		\label{pic:sparkfun_jetbot}
+            	\end{figure}
+        \section{Předzpracování}
+        	Před samotnou detekcí pruhu je nutné nejprve upravit surová vstupní data v podobě snímků z kamery připevněné na robotovi. Vlivem použití reálných optických prvků a nepřesností při výrobě dochází ke zkreslení zachycené skutečnosti. V této práci budou uvažována dvě, radiální a tangenciální.
+        	
+        	\subsection{Radiální zkreslení}
+        		Radiální zkreslení vzniká vlivem prostupu obrazu skrze čočku na senzor. Kruhový tvar čočky pak obraz transformuje odlišně podle vzdálenosti místa prostupu od středu čočky. Více zkreslení podléhají body obrazu úměrné vzdálenosti od jeho středu viz. Obrázek \ref{pic:radial_distortion}
+        		
+        			\begin{figure}[h]
+        				\centering
+        				\includegraphics[width=.7\textwidth]{./Graphics/radial_distortion_schema.pdf}
+        				\caption{Zobrazení radiálního zkreslení při prostupu světelných paprsků čočkou. Zdroj \cite[p.~376]{learning_opencv} }
+        				\label{pic:radial_distortion}
+        			\end{figure}
+        			
+        		Tuto závislost lze také popsat pomocí prvních několika stupňů Taylorova rozvoje  v okolí \(r=0\) jako
+        		\begin{eqnarray}
+        			x_{corrected} &=& x\cdot(1 + k_{1}r^{2} + k_{2}r^{4} + k_{3}r^{6})\\
+        			y_{corrected} &=& y\cdot(1 + k_{1}r^{2} + k_{2}r^{4} + k_{3}r^{6}),
+        		\end{eqnarray}
+        		kde \((x,y)\) jsou původní zkreslené body a \((x_{corrected}, y_{corrected})\) jsou jejich nové polohy po korekci. Koeficienty \(k_{1}, k_{2}, k_{3}\) jsou proměnné a popisují dané zkreslení.
+        	\subsection{Tangenciální zkreslení}
+	        	Druhým nejčastějším typem je tangenciální zkreslení. Je způsobeno nepřesností výroby samotné kamery, kdy objektiv není uložen přesně paralelně se snímacím senzorem viz. Obrázek \ref{pic:tangencial_distortion} a některé části obrazu se tak mohou jevit posunuté a roztažené.
+	        		\begin{figure}[h]
+	        			\centering
+	        			\includegraphics[width=.7\textwidth]{./Graphics/tangencial_distortion.pdf}
+	        			\caption{Zobrazení tangenciálního zkreslení při nepřesném uložení objektivu vůči senzoru v levné kameře nalevo. Zdroj \cite[p.~377]{learning_opencv} }
+	        			\label{pic:tangencial_distortion}
+	        		\end{figure}
+	        	Minimální popis tohoto jevu je rovnicemi
+	        		\begin{eqnarray}
+	        			x_{corrected} = x + [2p_{1}y + p_{2}(r^{2} + 2x^{2})]\\
+	        			y_{corrected} = y + [p_{1}(r^{2} + 2y^{2}) + 2p_{2}x]
+	        		\end{eqnarray}
+	        	opět popisující transformaci bodů zkresleného obrazu \((x, y)\) na body po korekci \((x_{corrected}, y_{corrected})\). Proměnné \(p_{1}\) a \(p_{2}\) jsou parametry daného zkreslení.
+	        \subsection{Korekce zkreslení}
+	        	Pro požadovanou korekci je potřeba zjistit neznámé parametry obou uvedených zkreslení. Pro jejich stanovení je potřeba provést měření v podobě snímání obrazu kamerou a získat tak body \((x,y)\) reprezentující pozice pixelů ve zkresleném obrazu. Aby bylo možné získat body po korekci \((x_{corrected}, y_{corrected})\), je nutné do snímaného prostoru přidat kalibrační objekt v podobě šachovnice se známým rozměrem viz. Obrázek \ref{pic:calibration_chessboard_01}. 
+	        		\begin{figure}[h]
+	        			\centering
+	        			\includegraphics[width=.7\textwidth]{./Graphics/calibration_chessboard_01.png}
+	        			\caption{Ukázka jednoho snímku z kalibračního datasetu ss šachovnicí s rozměry 9x6.}
+	        			\label{pic:calibration_chessboard_01}
+	        		\end{figure}
+	        	
+	        	Díky knihovně OpenCV (v kódu jako \command"cv2") lze pak snadno iterovat přes uložené snímky a nalézt jednotlivé vnitřní rohy šachovnice pomocí funkce \command"findChessboardCorners()", která bere jako vstup černobílý obrázek. Nalezené body jsou dále zpřesněny funkcí \command"cornerSubPix()" a lze je poté vykreslit jako na Obrázku \ref{pic:calibration_chessboard_01}.
+	        	
+	        	Nyní lze pomocí funkce \command"cv2.calibrateCamera()" a spárováním skutečných a naměřených bodů spolu s rozměry snímku získat vnitřní parametry kamery, zkreslení a vektory rotace a translace. Pro výpočet se nejprve získají vnitřní parametry kamery a poté je použita metoda výpočtu PnP\footnote{Perspective-n-Point (PnP) je výpočet řešící rotaci a translaci z 3D do 2D prostoru.} pro odhad výchozí pozice kamery a optimalizačním algoritmem Levenberg-Marquardt jsou zpřesněny minimalizací odchylky skutečné a odhadnuté polohy bodů dle získaných parametrů. 
+	        	
+	        	Pro samotnou korekci je potřeba ještě zpřesnit matici vnitřních parametrů s ohledem na škálovací parametr \command"alpha" funkcí \command"cv2.getOptimalNewCameraMatrix()". \command"alpha" ovlivňuje počet nepotřebných pixelů, kde \command"alpha=0" je minimum a \command"alpha=1" jsou všechny s černými místy navíc viz. Obrázek \ref{pic:calibration_chessboard_02}.
+	        	
+	        	Následně nabízí OpenCV dvě možnosti korekce v podobě funkcí \command"cv2.undistort()", která vrátí přímo výsledek nebo \command"cv2.initUndistortRectifyMap()", která vrátí dvě tzv. mapy popisující korekci a transformaci. Ty se následně aplikují pomocí \command"cv2.remap()". V této práci je využita druhá možnost, neboť je při sekvenčním zpracování více obrázků rychlejší.
+	        	
+	        	V případě volby \command"alpha > 0" zbývá jen oříznout obrázek na doporučený region s minimem nepotřebných pixelů vyznačený v Obrázku \ref{pic:calibration_chessboard_02}. Zbylé pixely vně tohoto regionu jsou silně deformovány z důvodu korekce a v této práci nebudou využity ačkoliv to možné je. Předzpracování vstupu je tímto hotové a obrázek lze považovat za vstup do testovaných přístupů.
+	        	
+	        		\begin{figure}[h]
+	        			\centering
+	        			\includegraphics[width=.7\textwidth]{./Graphics/calibration_chessboard_02.png}
+	        			\caption{Ukázka snímku \ref{pic:calibration_chessboard_01} po korekci s vyznačeným regionem s minimem nežádoucích pixelů.}
+	        			\label{pic:calibration_chessboard_02}
+	        		\end{figure}
+	        	
+        	
         \section{Algoritmické řešení}
-        \textbf{zmínit předzpracování}
+        	V tomto přístupu jde o to prakticky demonstrovat použití a limity běžných algoritmických metod na úloze detekce pruhu.
             \subsection{Extrakce značení cesty}
-            	Použité filtry sice odstraní hrany v nežádoucích směrech, ale kromě nich odhalí a zviditelní hrany, které jsou ve stejném směru, ale působí jako šum. Toho se lze zbavit díky aplikace masky vytvořené dle hledané barvy. Aby se dala barva pohodlně vybrat, transformuje se obrázek z typického RGB do HSV spektra (rozdíl na Obrázku \ref{pic:HSV_spektrum}), kde jsou jednotlivé pixely popsány, ale odstínem barvy H (hue), sytostí S (saturation) a intenzitou V (value) (viz. obrázek \ref{pic:HSV_spektrum}). V tomto prostředí lze pak snadno nastavit rozmezí hledané barvy, její intenzity a sytosti a dvojím prahováním\footnote{Nalezení hodnot vyhovujících daným podmínkám} vytvořit binární\footnote{Data obsahující pouze dvě hodnoty, obvykle (\(0\),\(1\)) nebo (\verb"True",\verb"False")} masku s informací o pozici jednotlivých pixelů požadované barvy.\\
-            	\begin{figure}[ht]
-            		\centering
-            		\includegraphics[width=.75\textwidth]{./Graphics/RGB_mixing.png}
-            		\caption{RGB spektrum.}
-            	\end{figure}
+            
+	            	\begin{figure}[h]
+	            		\centering
+	            		\includegraphics[width=.7\textwidth]{./Graphics/algorithmic_input.png}
+	            		\caption{Vstupní snímek pro detekci.}
+	            		\label{pic:algorithmic_input}
+	            	\end{figure}
+	            	
+            	Ze vstupního obrázku (Obrázek \ref{pic:algorithmic_input}) je patrné, že samotné čáry pruhu se nachází v dolní části obrazu. Pro lepší funkčnost se použije ořez horního obzoru, který neobsahuje relevantní informace pro detekci čar a spodní část se transformuje.
             	
-            	\begin{figure}[ht]
-            		\centering
-            		\includegraphics[width=.75\textwidth]{./Graphics/Triangulo_HSV.png}
-            		\caption{HSV spektrum.}
-            		\label{pic:HSV_spektrum}
-            	\end{figure}
-            	%Autor: Samus_ – Vlastní dílo, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=1302915
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.7\textwidth]{./Graphics/homography_schema.pdf}
+            			\caption{Schéma homografické transformace mezi dvěma rovinami. Zdroj \cite[p.~385]{learning_opencv}}
+            			\label{pic:homography_schema}
+            		\end{figure}
+            		
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.7\textwidth]{./Graphics/calibration_pattern.png}
+            			\caption{Použitá šachovnice pro homografickou transformaci. Zdroj \cite{duckietown_documentation}}
+            			\label{pic:calibration_pattern}
+            		\end{figure}
             	
-            	Prvkovým násobením masky výskytu hledané barvy s orientací hran z detekce vznikne průnik obou požadavků. Tato nová binární maska bude využita pro další zpracování v následující části \ref{chap:01_postprocessing}.
+            	Oproti běžným pozemním komunikacím obsahuje testovací trasa pro účely testovaní i celkem prudké zatáčky a vzhledem k její menší celkové velikosti byl vybrán výřez za pomoci kalibrační šachovnice viz. Obrázek \ref{pic:calibration_pattern}. S její pomocí se provede tzv. homografická transformace při které dochází k transformaci z jedné roviny obrazu do jiné. K jejímu provedení je potřeba získat transformační matici. Pokud uvažujeme případ na obrázku \ref{pic:homography_schema} pak platí
+	            	\begin{eqnarray}
+	            		\widetilde{\mathbf{Q}} &=& \begin{bmatrix}X&Y&Z&1\end{bmatrix}\\
+	            		\widetilde{\mathbf{q}} &=& \begin{bmatrix}x&y&1\end{bmatrix}.
+	            	\end{eqnarray}
+	            V reálném případě se zjednodušuje reprezentace zmíněného \(\tilde{Q}\) vypuštěním rotace a translace v ose \(Z\) na 
+	            	\begin{equation}
+	            		\widetilde{\mathbf{Q}}' = \begin{bmatrix}X&Y&1\end{bmatrix}
+	            	\end{equation}
+	            a homografickou transformační matici lze pak definovat jako 
+	            	\begin{eqnarray}
+	            		\mathbf{\mathbf{H}} &=& s\mathbf{M}\begin{bmatrix}\mathbf{r_{1}}& \mathbf{r_{2}} & \mathbf{t}\end{bmatrix},
+	            	\end{eqnarray}
+	            kde \(s\) je faktor měřítka, \(\mathbf{r_{1}}\) a \(\mathbf{r_{2}}\) jsou rotační a \(\mathbf{t}\) translační vektory, \(\mathbf{M}\) je matice již známých vnitřních parametrů kamery definovaná jako
+	            	\begin{equation}
+	            		\mathbf{M} = 
+	            		\begin{bmatrix}
+	            			\frac{f}{p_{x}}&0&c_{x}\\
+	            			0&\frac{f}{p_{y}}&c_{y}\\
+	            			0&0&1
+	            		\end{bmatrix},
+	            	\end{equation}
+	            kde \(f\) je ohnisková vzdálenost, \(p_{x}\) a \(p_{y}\) jsou velikosti pixelu snímače v milimetrech v odpovídajícím směru osy, \(c_{x}\) a \(c_{y}\) jsou souřadnice středu roviny pro korekci vychýlení snímače z optické osy.
+	            
+	            Výsledná rovnice transformace pak bude 
+	            	\begin{equation}
+	            		\widetilde{\mathbf{q}} = \mathbf{H}\widetilde{\mathbf{Q}}'
+	            	\end{equation}
+	            a v případě transformace opačné se použije inverzní matice \(\mathbf{H}^{-1}\). Její aplikace poskytne v případě šachovnice na obrázku \ref{pic:calibration_pattern} Obrázek \ref{pic:algorithmic_warped} a při zpracování vstupního obrázku s pruhy \ref{pic:algorithmic_input} dostaneme pohled z tzv. ptačí perspektivy (Obrázek \ref{pic:algorithmic_warped} (d)), což je výhodné pro určení směru průběhu čar či jejich linearity.
+	            
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.8\textwidth]{./Graphics/homography_transform.png}
+            			\caption{Aplikace homografické transformace na vstupní obraz (a), (c), kterou vznikly odpovídající (b) a (d).}
+            			\label{pic:algorithmic_warped}
+            		\end{figure}
             	
+            	V této fázi lze použít prahování podle barev v případě čar specifické barvy, čímž lze v ideálním případě rovnou extrahovat samotné pruhy. To je však v tomto příkladu nepoužitelné díky bílé barvě čar a četných odlesků podložky, které se jeví taktéž bíle. Před dalším krokem byl Obrázek \ref{pic:algorithmic_warped}(d) zašuměn kovolucí s Gaussovým jádrem o rozměrech 10x10, aby vyhladil šum a nerovnosti podložky. Pro extrakci samotných čar byla použita technika hranové detekce konvolucí orientovaných jader vytvořených pomocí směrové derivace podle x Gausssova kruhově symetrického jádra o velikosti 10x10 a variancí \(VAR[x]=8\) a \(VAR[y]=1\) viz. sekce\ref{sec:extrakce_znaceni}. Tyto hodnoty byly určeny experimentálně na základě snahy eliminovat vroubky ve snímané leské podložce. Po binárním prahování metodou OTSU \textbf{POTŘEBA VYSVETLOVAT???} lze vidět že volba parametrů filtru úspěšně eliminovala odlesky podložky jak je vidět na Obrázku \ref{pic:algorithmic_bin}. Ten bohužel obsahuje i detekované hrany mezi černým pozadím a obrázkem. Tento jev lze odstranit tvorbou masky, která je statická a vázána na homografickou transformační matici.
+            		
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.8\textwidth]{./Graphics/algorithmic_bin.png}
+            			\caption{Detekované hrany pomocí orientovaných filtrů v Obrázku \ref{pic:algorithmic_warped}(d).}
+            			\label{pic:algorithmic_bin}
+            		\end{figure}
             	
-                V této fázi nastává chvíle, kdy z obrazových dat extrahujeme potřebná data o směru detekované cesty a její relativní polohy vůči vozítku. Ke stanovení těchto údajů využijeme všechny dříve zmíněné informace. Jako vstup použijeme masku získanou extrakcí cesty v předešlé fázi. Maska ale stále obsahuje šum, který se nepovedlo odstranit a proto se omezíme na dolní část masky a tvorbou histogramu \textbf{součet přes sloupce} získáme jasně viditelné vrcholky, kde se nachází počátek hledaných pruhů nejblíže vozítku. Vybereme tyto dva vrcholky jako startovní body pro následné hledání průběhu jednotlivých pruhů. To probíhá postupným vykreslováním obdélníků přes detekované čáry. Šířka ohraničení je rovná toleranci hledání a výška je zvolena s ohledem na vyvážení výpočetní náročnosti a přesnosti. Pokud dojde v daném řádku k vybočení bodů detekované čáry o stanovený počet pixelů, změní se pozice obdélníku, aby jeho střed byl uprostřed vybočené čáry z přímého směru. Tento proces opakujeme dokud nedosáhneme výšky snímku. Jednotlivé pixely ohraničené obdélníky označíme a spustíme nad nimi algoritmus, který proloží body křivkou. Jelikož víme, že většina cest bývá navrhována za pomoci křivek klothoid, které lze s mírnou chybou aproximovat kubickou křivkou viz. rovnice \ref{eqn:dukaz_aproximace_clothoidu_polynomem_3st}, proložíme jí označené body. Získané parametry jsou koeficienty jednotlivých křivek. jejich průměrem nalezneme střed cesty s jeho vlastními koeficienty a tuto křivku budeme považovat za ideální trajektorii průjezdu cestou. Ze znalosti obecného tvaru kvadratické rovnice a jejích vlastností určíme tečnu jako \textbf{rovnice pro tečnu a kvadratickou rovnici a lineární rovnici}. Z parametrů tečny získáme polohu středu cesty a její tečnu v daném bodu a tedy ideální polohu vozítka v daném bodě. Tato informace je potřebným vstupem pro regulátor, který bude způsobovat akční zásahy vozítka. Použité vozítko bohužel nemá enkodéry a nejsou tak k dispozici informace o poloze nebo rychlosti. Data z obrazu jsou však díky kameře snímána kousek před vozítkem a jedná se tedy o ideální budoucí pozici, které se musí vozítko snažit přiblížit.
+            	Ze získaného binárního obrázku jsou dále extrahovány jednotlivé body náležící příslušné čáře. To je prováděno tzv. clusteringem\textbf{PRIDAT FOOTNOTE???} a jak bylo zmíněno v teoretické části, pro tento krok je použita aplikace tzv. klouzavých okének (převzato a upraveno z \cite{sliding_window}). Ty pracují na principu vykreslování obdélníků o daném rozměru na sebe s tím, že následující okénko změní svoji polohu v horizontální ose podle průměrné hodnoty horizontálních souřadnic bodů nalezených v něm, pokud by k posunu nedošlo. Tento postup se opakuje, dokud se nedosáhne maximálního počtu obdélníků nebo nejsou nalezeny žádné pixely hran.
+            	
+            	Tento algoritmus ale vyžaduje stanovit startovací polohu. Stanovíme omezení na dolní část binárního obrázku a tvorbou histogramu součtem přes sloupce získáme jasně viditelné vrcholky, kde se nachází počátek hledaných pruhů nejblíže vozítku. Vybereme tyto dva vrcholky jako startovní body pro následné hledání průběhu jednotlivých pruhů.
+            	
+            		\begin{figure}[h]
+            			\centering
+            			\includegraphics[width=.8\textwidth]{./Graphics/sliding_windows.png}
+            			\caption{Zpracovaný binární obrázek metodou tzv. klouzavých okének včetně již rozdělených pixelů proložených kubickými polynomy, růžově vyznačeným středem obrazu a červenou tečnou středové trajektorie.}
+            			\label{pic:sliding_windows}
+            		\end{figure}
+            	
+            	Pro každou čáru proběhne jeden tento algoritmus, který obdélníky vymezí prostor náležící dané čáře a pixely uvnitř jsou přidány do odpovídajícího pole viz Obrázek \ref{pic:sliding_windows}. Tato pole jsou pak použita na proložení bodů kubickým polynomem vybraným jako aproximací Klotoidy viz. rovnice \ref{sec:extrakce_znaceni} v teoretická části práce. Na tuto operaci byla využita funkce \command"np.polyfit()" v rámci knihovny Numpy (np), která používá metodu minimalizace kvadratické chyby\textbf{PRIDAVAT TEDY TEN ODKAZ???} a jejím výstupem jsou jednotlivé koeficienty následující obecné rovnice
+            		\begin{equation}
+            			y = p_{1}x^{3} + p_{2}x^{2} + p_{3}x + p_{4}.
+            		\end{equation}
+            	Každá čára má samostatnou rovnici, která může být ovlivněna šumem v případě detekce pouze její části nebo chybným prahováním. Proto byla stanovena ještě jedna čára, která je průměrem koeficientů pravé a levé rovnice. Ta zastává požadovanou ideální trajektorii, po které by se mělo vozítko dále ubírat. Z její rovnice lze také zjistit derivaci v nulovém bodě \(x=0\)
+            		\begin{eqnarray}
+            			\dot{y} &=& 3p_{1}^{2}x + 2p_{2}x + p_{3} + 0\\
+            			\dot{y} &=& p_{3} \label{eqn:derivace}
+            		\end{eqnarray}
+            	a lze zjistit lineární rovnici tečny v bodě \(x=0\) jako
+            		\begin{equation}
+            			y_{tecna} = kx + q \label{eqn:tecna}	
+            		\end{equation},
+            	kde  směrnice \(k\) je derivací rovnice viz. \ref{eqn:derivace}
+            		\begin{equation}
+            			k = \dot{y} = p_{3}
+            		\end{equation}
+            	a \(q\) parametr je výsledkem řešení následující rovnice dosazením \(x=0\) a \(y=p_{4}\)
+            		\begin{eqnarray}
+            			y_{tecna} &=& p_{3}x + q\\
+            			q &=& p_{4}
+            		\end{eqnarray}
+            	Což dá po dosazení do \ref{eqn:tecna} výslednou rovnici tečny
+            		\begin{equation}
+            			y_{tecna} = p_{3}x + p_{4}.
+            		\end{equation}
+            	
+            	Díky ní lze nyní určit odchylku ideální trajektorie od středu obrazu a její sklon. Tyto informace jsou potřebným vstupem pro regulátor, který bude způsobovat akční zásahy vozítka. Použité vozítko bohužel nemá enkodéry a nejsou tak k dispozici informace o poloze nebo rychlosti. Data z obrazu jsou však díky předsunuté kameře snímána kousek před vozítkem a jedná se tedy o ideální budoucí pozici, které se musí vozítko snažit přiblížit.
+            	
             \subsection{Regulace pohybu}
-                Jelikož vozítko nemá k dispozici senzor k měření polohy ani rychlosti, jsou možnosti řízení omezené. Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charkteristice motorů, ale také valivému odporu mezi kolem a podložkou.\\
-                Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální budoucí trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na obrázku \ref{pic:regulator_schema}, kdy vnější regulátor bere jako vstup diferenci polohy vozítka od trajektorie. Tato diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu.  Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je pak dále použit jako vstup vnitřního. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme vycentrování vozítka na požadovanou budoucí trajektorii.\\
+                Jelikož vozítko nemá k dispozici senzor k měření polohy ani rychlosti, jsou možnosti řízení omezené. Pohyb se ovládá na základě informace velikosti signálu na vstupu jednotlivých motorů. Jejich rozsah je v intervalu \(<-1,1>\), kde kladné hodnoty způsobují pohyb vpřed a záporné zpět. Takové ovládání není lineární nejen kvůli momentové charkteristice motorů, ale také valivému odporu mezi koly a podložkou.
+                
+                Ze zpracování jsou k dispozici informace o natočení vozítka proti ideální budoucí trase a poloze oproti středu trasy. To jsou dva parametry, které je nutné současně řídit. Protože však na sebe mají přímý vliv, spojíme dva regulátory do tzv. kaskádního regulátoru zobrazeného na Obrázku \ref{pic:regulator_schema}, kdy vnější regulátor bere jako vstup diferenci polohy vozítka od trajektorie. Diference je vypočítána jako rozdíl pozice čáry při spodním okraji obrazu a jeho středu, která je dále normalizována šířkou obrazu. Rozdíl akčního zásahu vnějšího regulátoru a odchylky směru jízdy (náklonu) je pak dále použit jako vstup vnitřního. Jeho výstup je pak přímo akčním zásahem, který působí na jednotlivá kola vozítka. Požadovaná reference je nastavena na hodnotu \(0\), kterou docílíme centrování vozítka na požadovanou budoucí trajektorii.\\
                 Použité regulátory byly oba typu \(PI\), kde k nastavování parametrů byla použita metoda třetin na rovném úseku testovací trajektorie.
-                 
-                \textbf{opravit informace o regulátoru a jakým způsobem pracuje a jak byl navržen apod.....mrknout na jetbota}
+                
         \section{Deep learning řešení - segmentace}
+        	Pro přístup pomocí hlubokého řešení bylo vybráno dvoustupňové řešení zmíněné v \ref{sec:reseni_deep_learning} s pomocí segmentace. Následující popis implementace tak v podstatě nahrazuje část extrakce čar v algoritmickém řešení, zatímco výstupní zpracování zůstane totožné a proto zde již zmíněno nebude.
+        	
+        	\subsection{Tvorba datasetu}
+        		Dataset je klíčovou součástí jakéhokoliv řešení na bázi hlubokého učení, neboť má přímý vliv na kvalitu používaného modelu. Je důležité vytvořit ho přesně podle toho jaký výstup je očekáván.
+        		
+        		Pro účely praktické realizace byl vytvořen z nahrávky průjezdu trasou vozidla. Jelikož víme, že vstupem bude snímek již po korekci, použije se i v datasetu. Z 553 snímků bylo vybráno celkem 53 k anotaci.
+        		
+        		Anotace byla provedena v programu CVAT\footnote{Computer Vision Annotation Toolkit} ručním kreslením uzavřených polygonů reprezentující samotné čáry viz. Obrázek \ref{pic:anotace}. Pro export byl vybrán formát COCO \cite{COCO_format}, jeden ze standardně používaných formátů.
+        			
+        			\begin{figure}[h]
+        				\centering
+        				\includegraphics[width=.8\textwidth]{./Graphics/dataset.png}
+        				\caption{Originální obrázek v datasetu (nalevo) spolu s jeho anotací (napravo).}
+        				\label{pic:anotace}
+        			\end{figure}
+        	\subsection{Trénování modelu}
+        		Jak bylo již zmíněno v teoretické části \ref{sec:reseni_deep_learning}, existuje spoustu architektur neuronových sítí. Po praktickou ukázku byla vybrána síť U-Net, která dle článku \cite{U-Net} ke trénování nepotřebuje velký dataset, dosahuje dobrých výsledků a její struktura je použita v několika dalších architekturách jak je uvedeno v článku \cite{semantic_segmentation_survey}.
+        		
+        		Neuronová síť byla sestavena od základu dle článku \cite{U-Net} v jazyce Python s pomocí frameworku TensorFlow a Keras. Jedinou změnou oproti článku je vstupní velikost sítě, která byla větší než obrázek z kamery vozítka a byla tak nastavena na (256, 256, 3).
+        		 
+        		Trénování bylo provedeno na herním laptopu s následující konfigurací:\\
+        		CPU: Intel Core i7-8750H\\
+        		GPU: Nvidia GeForce GTX 1050 Mobile (4GB)\\
+        		Díky relativně malé paměti grafické karty bylo nutné omezit velikost batche na 4 obrázky a spustit tak trénování s následujícími parametry:\\
+        		\command"num_classes=2"\\
+        		\command"batch_size=4"\\
+        		\command"epochs=10"\\
+        		počet trénovacích dat = 36\\
+        		počet validačních dat = 17\\
+        		\command"learning_rate=1e-4"\\
+        		
+        		parametry modelu 31M
+        		Celkové trénování skončilo po zhruba ...min s validační přesností 98.98%
+        	\subsection{Predikce}
         \section{Zhodnocení}
         	\textbf{Porovnání prakticky realizovaných metod}
+        	Z měření vychází, že použití Algoritmické metody pro detekci čar cesty je zhruba 10x rychlejší než s pomocí hlubokého učení.
 	% _____________________________________________________________________________
 	%
 	%
@@ -525,8 +727,11 @@
 	% _____________________________________________________________________________
 	%
     \chapter{Závěr}
-        \section{Shrnutí}
-            neco
+        Cílem této bakalářské práce byla analýza systému pro udržení vozidla v jízdním pruhu a praktická demonstrace dvou vybraných. V první teoretické části byly popsány tři přístupy k řešení úlohy a to algoritmický, pomocí zpětnovazebního a hlubokého učení. Zde bylo předestřeno jakým způsobem jednotlivé systémy pracují.
+        
+        V Druhé části byly představeny simulátory použitelné pro substituci fyzického prostředí pro vývoj a testování přístupů prezentovaných v první části.
+        
+        V poslední části byla popsána implementace algoritmického přístupu na reálných datech a spolu s hlubokým učením. Oba přístupy byly porovnány na stejných datech, což vyústilo v překvapivé
                     
     % _____________________________________________________________________________
     %

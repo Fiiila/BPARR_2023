@@ -4,14 +4,13 @@ from pathlib import Path
 if __name__ == "__main__":
     directory = Path("./BPARR_latex/")
 
-    with ZipFile("BPARR_latex/BPARR_latex_sync/BPARR_latex.zip", "w", ZIP_DEFLATED, compresslevel=9) as archive:
+    with ZipFile("BPARR_latex/BPARR_latex_sync/BPARR_latex_20230802.zip", "w", ZIP_DEFLATED, compresslevel=9) as archive:
         # compress single files in directory to exclude temp files
         file_list = ["Jasek_BPARR_2023.tex",
                      "Jasek_BPARR_2023.pdf",
                      "fasthesis.cls",
                      "sources.bib",
-                     "zadani.pdf",
-                     "latexmkrc"
+                     "zadani.pdf"
                      ]
         for cust_file in file_list:
             cust_file = directory.joinpath(cust_file)
