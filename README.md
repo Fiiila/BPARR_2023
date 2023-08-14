@@ -1,3 +1,8 @@
-# Repository BPAŘR 2023
+# Repository použitých zdrojových kódů pro BPAŘR 2023
 
--  budou zde sjednoceny všechny části bakalářské práce pro následně jednoduché prohlížení
+> Pro instalaci použitých knihoven lze použít exportovaný conda environment pomocí následujícího příkazu v 
+> kořenové složce repository
+> ```commandline
+> conda env create --file BPARR_2023.yml
+> ```
+

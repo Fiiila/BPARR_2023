@@ -2,69 +2,61 @@ from pathlib import Path
 import glob
 import cv2
 import numpy as np
+import time
+import tensorflow as tf
 from BPARR_practical.preprocessing import generate_undistortion_maps, load_camera_intrinsic, \
     generate_homographic_trans_mtx
 from BPARR_practical.postprocessing import find_line_begining, cluster_with_sliding_window, compute_line_polynom
 
-
-def create_steerable_filters(kernel_size, variance=(2, 2), center=(0, 0), amplitude=1):
-    """Function to generate 2D Gaussian kernel derived in x direction
-
-    :param np.ndarray kernel_size: size of 2D kernel matrix
-    :param tuple[int, int] variance: of 2D Gaussian in axes (x, y)
-    :param tuple[int, int] center: center of 2D Gaussian (x, y)
-    :param int amplitude: amplitude of 2D Gaussian
-    :return np.ndarray: returns 2D matrix of derived 2D Gaussian in x axe
-    """
-    # 2D Gaussian creation
-    x = np.linspace(-(kernel_size - 1) / 2, (kernel_size - 1) / 2, kernel_size)
-    y = x.copy()
-    x0, y0 = center
-    varx, vary = variance
-    gauss_kernel = np.zeros((len(y), len(x)))
-    gauss_kernel_diff = np.zeros((len(y), len(x)))
-    # computing 2D Gaussian and its derivative form in x direction
-    for idy in range(len(y)):
-        for idx in range(len(x)):
-            gauss_kernel[idy, idx] = amplitude * np.exp(
-                -((np.square(x[idx] - x0) / np.square(2 * varx)) + (np.square(y[idy] - y0) / np.square(2 * vary))))
-            gauss_kernel_diff[idy, idx] = -(
-                    np.exp(-np.square(x[idx] - x0) / (2 * varx) - np.square(y[idy] - y0) / (2 * vary)) * (
-                    2 * x[idx] - 2 * x0)) / (2 * varx)
-
-    # Alternative method to get derivative form of 2D Gaussian
-    # tmp = np.gradient(gauss_kernel)
-    return gauss_kernel_diff
+def initialize_nn(model_dir, model_name, img_size, warmup=1):
+    # Model parameters
 
 
-def algorithmic_extraction(input_image, homograph_mtx, w, h):
-    # warp perspective
-    img_warped = cv2.warpPerspective(input_image, homograph_mtx, (w, h))
+    # initialize GPU and load model
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        # Restrict TensorFlow to only allocate 1GB of memory on the first GPU
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            tf.config.set_logical_device_configuration(
+                gpus[0],
+                [tf.config.LogicalDeviceConfiguration(memory_limit=1024)])
+            logical_gpus = tf.config.list_logical_devices('GPU')
+            print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+        except RuntimeError as e:
+            # Virtual devices must be set before GPUs have been initialized
+            print(e)
 
-    # convert image to grayscale for edge detection
-    img_gray = cv2.cvtColor(img_warped, cv2.COLOR_BGR2GRAY)
+    # Load model
+    model = tf.keras.models.load_model(model_dir + model_name)
 
-    # gaussian blurring
-    kernel = np.ones((10, 10), np.float32) / 100
-    img_gray = cv2.filter2D(img_gray, -1, kernel)
+    # Model warmup
+    if warmup > 0:
+        for i in range(warmup):
+            _ = model.__call__(np.empty(shape=(1, img_size[0], img_size[1], 3), dtype=np.float32))
 
-    # feature extraction
-    filter_im = cv2.filter2D(src=img_gray, ddepth=-1, kernel=fltr_rl)
-    filter_im1 = cv2.filter2D(src=img_gray, ddepth=-1, kernel=fltr_lr)
+    return model
 
-    # binary thresholding
-    thr_bin, filter_im_bin_rl = cv2.threshold(filter_im, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    filter_im_bin_rl = filter_im_bin_rl.astype(dtype="int")
-    filter_im_bin_lr = ((filter_im1 > thr_bin) * 255).astype(dtype="int")
-    filter_im_bin = (((filter_im_bin_rl + filter_im_bin_lr) >= 255) * 255).astype(dtype="uint8")
 
-    # mask out unwanted edges
-    cutout_width = 30  # number of px, that will be extracted from middle to move closer...needs to be odd
-    edge_mask = np.zeros((h, w), dtype="uint8")
-    mask = ((img_gray > 0) * 1).astype(dtype="uint8")
-    edge_mask[:, cutout_width // 2:w // 2] += mask[:, 0:w // 2 - cutout_width // 2]
-    edge_mask[:, w // 2:w - cutout_width // 2] += mask[:, w // 2 + cutout_width // 2:w]
-    filter_im_bin *= edge_mask
+def segmentation_extraction(input_image, model, img_size, homograph_mtx):
+    h, w = input_image.shape[:2]
+    # use U-Net for extracting lanes
+    tmp = np.expand_dims(cv2.resize(input_image, img_size), 0)
+    result = model.__call__(tmp)[0]  # predict
+    result = tf.identity(result)  # move tensor from GPU to CPU
+    result = result.numpy()  # convert predicted tensor to numpy
+
+    # Binary thresholding
+    result = result > 0.5
+    result = result * 255
+    result = result.astype(np.uint8)
+
+    # resize NN output to match with captured image
+    resized = cv2.resize(result, (w, h), interpolation=cv2.INTER_LINEAR)
+
+    # warp perspective to bird view
+    filter_im_bin = cv2.warpPerspective(resized, homograph_mtx, (w, h))
 
     return filter_im_bin
 
@@ -97,9 +89,11 @@ if __name__ == "__main__":
     img_crop = img_undist[y:y + h, x:x + w]
     H = generate_homographic_trans_mtx(img=img_crop)
 
-    # Create steerable filter
-    fltr_rl = create_steerable_filters(kernel_size=10, variance=(8, 1), center=(0, 0))
-    fltr_lr = fltr_rl[:, ::-1]
+    # Load model
+    model_dir = "../deep_learning/models/"  # directory where trained models will be saved
+    model_name = "lane_detection.h5"  # name of the trained model
+    img_size = (256, 256)  # size of images which will be processed with neural network (only width and height)
+    model = initialize_nn(model_dir, model_name, img_size, warmup=1)
 
     # Cycle for line extraction
     for image_number, image in enumerate(images):
@@ -115,7 +109,7 @@ if __name__ == "__main__":
         img_crop = img_undist[y:y + h, x:x + w]
 
         # Algorithmic line extraction
-        bin_mask = algorithmic_extraction(input_image=img_crop, homograph_mtx=H, w=w, h=h)
+        bin_mask = segmentation_extraction(input_image=img_crop, model=model, img_size=img_size, homograph_mtx=H)
 
         # Find lane starts from binary image
         left_line_base, right_line_base = find_line_begining(bin_mask)

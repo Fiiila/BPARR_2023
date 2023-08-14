@@ -1,3 +1,4 @@
-# Zde bude odkaz na resources pro praktickou část bakalářské práce
+# Resources
 
-- zatím jsou obrázky lokálně pro jejich velkou velikost
+- složka zdrojových datasetů
+- ke stažení [zde](https://mega.nz/file/0lUykIwK#7EdXzObDcrv-01nUBg4KvO7fMQGJpOlq5MX3SJEC0bw)

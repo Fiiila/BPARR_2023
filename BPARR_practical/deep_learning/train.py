@@ -8,12 +8,15 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing.image import load_img
 import random
+from datetime import datetime
+
 
 
 if __name__=="__main__":
+    # os.add_dll_directory("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/extras/CUPTI/lib64/cupti64_112.dll")
     # Hyperparameters
-    image_dir = "datasets/dataset_01_segmentation/images/"   # directory with input RGB .jpg images
-    masks_dir = "datasets/dataset_01_segmentation/masks/"    # directory with input .png images with values 1,2,3,4....
+    image_dir = "datasets/dataset_01/images/"  # directory with input RGB .jpg images
+    masks_dir = "datasets/dataset_01/masks/"  # directory with input .png images with values 1,2,3,4....
     model_dir = "models/"           # directory where trained models will be saved
     model_name = "lane_detection.h5"       # name of the trained model
     img_size = (256, 256) #(128, 128)           # size of images which will be processed with neural network (only width and height)
@@ -80,12 +83,38 @@ if __name__=="__main__":
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
     model.compile(optimizer=optimizer, loss="binary_crossentropy", metrics='accuracy')#optimizer="rmsprop",loss="sparse_categorical_crossentropy"
     model.summary()
+
+    # define callbacks
+    logs = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    tboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logs,
+                                                     histogram_freq=1,
+                                                     profile_batch='500,520')
+
     callbacks = [
-        keras.callbacks.ModelCheckpoint(model_dir+'best_checkpoint_'+model_name, save_best_only=True)
+        keras.callbacks.ModelCheckpoint(model_dir+'best_checkpoint_'+model_name, save_best_only=True),
+        tboard_callback
     ]
 
     # Train the model
-    model.fit(train_gen, epochs=epochs, validation_data=val_gen, callbacks=callbacks)
+    hist = model.fit(train_gen, epochs=epochs, validation_data=val_gen, callbacks=callbacks)
+
+    fig, ax = plt.subplots(1, 2, layout="tight")
+    ax[0].plot(hist.history["accuracy"], label="accuracy")
+    ax[0].plot(hist.history["val_accuracy"], label="validation accuracy")
+    ax[0].set_xlabel("epocha")
+    ax[0].set_ylabel("accuracy [%]")
+    ax[0].set_title("Accuracy")
+    ax[0].legend(loc="lower right")
+    ax[1].plot(hist.history["loss"], label="loss")
+    ax[1].plot(hist.history["val_loss"], label="validation loss")
+    ax[1].set_xlabel("epocha")
+    ax[1].set_ylabel("loss")
+    ax[1].set_title("Loss")
+    ax[1].legend(loc="upper right")
+    fig.suptitle("Historie trénování")
+    plt.savefig("./training_history.pdf", dpi=600, bbox_inches="tight", pad_inches=0.1, transparent=True)
+    plt.show()
     # Save model
     model.save(model_dir+model_name)
 

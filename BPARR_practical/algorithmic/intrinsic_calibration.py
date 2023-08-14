@@ -129,5 +129,5 @@ if __name__=="__main__":
               "tvecs": [t.tolist() for t in tvecs]
               }
 
-    with open("./camera_intrinsic_calibration.json", "w", encoding="utf-8") as f:
+    with open("../camera_intrinsic_calibration.json", "w", encoding="utf-8") as f:
         json.dump(params, f, indent=4, separators=(',', ':'))
